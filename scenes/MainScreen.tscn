@@ -1,0 +1,322 @@
+[gd_scene load_steps=6 format=3 uid="uid://b1m2n3o4p5q6r"]
+
+[ext_resource type="Script" uid="uid://552ln7flnk24" path="res://scripts/MainScreen.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://c7t8sas0t1u2v" path="res://resources/main_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://c8eae0f1g2h3i" path="res://scenes/ConfigEditor.tscn" id="3_config"]
+[ext_resource type="PackedScene" uid="uid://d1e2f3g4h5i6j" path="res://scenes/ModpackDownloader.tscn" id="4_modpack"]
+[ext_resource type="PackedScene" uid="uid://ba1bu5kyx2n8s" path="res://scenes/FlagsEditor.tscn" id="5_flags"]
+
+[node name="MainScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="ConfigEditor" parent="." instance=ExtResource("3_config")]
+unique_name_in_owner = true
+
+[node name="ModpackDownloader" parent="." instance=ExtResource("4_modpack")]
+unique_name_in_owner = true
+
+[node name="FlagsEditor" parent="." instance=ExtResource("5_flags")]
+unique_name_in_owner = true
+
+[node name="PlayerMenu" type="PopupMenu" parent="."]
+unique_name_in_owner = true
+item_count = 3
+item_0/text = "Kick"
+item_0/id = 0
+item_1/text = "Ban"
+item_1/id = 1
+item_2/text = "Make OP"
+item_2/id = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -152.0
+offset_right = -152.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -997.0
+offset_top = -323.0
+offset_right = -75.0
+offset_bottom = 325.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9599997, 1)
+split_offset = 800
+
+[node name="ConsoleSide" type="VBoxContainer" parent="Panel/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/HSplitContainer/ConsoleSide"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="ConsoleOutput" type="RichTextLabel" parent="Panel/HSplitContainer/ConsoleSide/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+bbcode_enabled = true
+scroll_following = true
+selection_enabled = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/HSplitContainer/ConsoleSide"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/HSplitContainer/ConsoleSide/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CommandInput" type="LineEdit" parent="Panel/HSplitContainer/ConsoleSide/HBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter server command..."
+
+[node name="Sidebar" type="Panel" parent="Panel/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/HSplitContainer/Sidebar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.375
+offset_top = -1.0
+offset_right = 299.625
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9166666, 1)
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Hbox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ProfileLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+layout_mode = 2
+text = "Server Profile:"
+
+[node name="HBoxProfile" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+layout_mode = 2
+
+[node name="ProfileSelector" type="OptionButton" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/HBoxProfile"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 1
+popup/item_0/text = "New Profile..."
+popup/item_0/id = 0
+
+[node name="SaveProfileButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/HBoxProfile"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "💾"
+
+[node name="HSeparator1" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+layout_mode = 2
+
+[node name="SetupPanel" type="VBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="PathLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+layout_mode = 2
+text = "Server Path:"
+
+[node name="PathInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "C:/Minecraft/Server"
+
+[node name="JarLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+layout_mode = 2
+text = "JAR Name:"
+
+[node name="HBoxJar" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+layout_mode = 2
+
+[node name="JarInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/HBoxJar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "fabric-server.jar"
+
+[node name="AnalyzeButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/HBoxJar"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Analyze JAR & Java"
+text = "🔍"
+
+[node name="RamLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+layout_mode = 2
+text = "RAM (Max/Min):"
+
+[node name="RamBox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+layout_mode = 2
+
+[node name="MaxRamInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/RamBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "4G"
+placeholder_text = "Max (4G)"
+
+[node name="MinRamInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/RamBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "2G"
+placeholder_text = "Min (2G)"
+
+[node name="JavaLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+layout_mode = 2
+text = "Java Path (Optional):"
+
+[node name="JavaInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Auto"
+
+[node name="FlagsLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+layout_mode = 2
+text = "JVM Optimization:"
+
+[node name="FlagsButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Configure JVM Flags"
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+layout_mode = 2
+
+[node name="ModpackButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+layout_mode = 2
+text = "Download Modpack"
+
+[node name="ControlSeparator" type="Control" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="PlayerLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+layout_mode = 2
+text = "Players Online:"
+
+[node name="PlayerList" type="ItemList" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MonitorPanel" type="VBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StatusLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Status: Stopped"
+horizontal_alignment = 1
+
+[node name="RestartNotification" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0, 1)
+text = "⚠️ Restart required"
+horizontal_alignment = 1
+
+[node name="StartStopButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Start Server"
+
+[node name="HSeparator3" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+layout_mode = 2
+
+[node name="ToolsLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+layout_mode = 2
+text = "Management Tools:"
+
+[node name="ConfigButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Edit server.properties"
+
+[node name="ModpackButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Install Modpack"
+
+[node name="HSeparator4" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+layout_mode = 2
+
+[node name="NetworkLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+layout_mode = 2
+text = "Remote Management:"
+
+[node name="RemoteMode" type="OptionButton" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Local Only"
+popup/item_0/id = 0
+popup/item_1/text = "Host Account"
+popup/item_1/id = 1
+popup/item_2/text = "Connect to Host"
+popup/item_2/id = 2
+
+[node name="RemoteAddress" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "IP Address (if Client)"
+
+[node name="RemotePort" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "8181"
+placeholder_text = "Port (8181)"
+
+[node name="NetworkButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Initialize Network"
