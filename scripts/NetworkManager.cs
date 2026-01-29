@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class NetworkManager : Node
 {
@@ -8,6 +9,7 @@ public partial class NetworkManager : Node
 
     [Signal] public delegate void ConnectionStatusChangedEventHandler(bool connected, bool isHost);
     [Signal] public delegate void ConfigurationSyncedEventHandler(string path, string jar, string maxRam, string minRam, string javaPath, string extraFlags);
+    [Signal] public delegate void RemotePropertiesReceivedEventHandler(Godot.Collections.Dictionary props);
 
     public override void _Ready()
     {
@@ -205,6 +207,37 @@ public partial class NetworkManager : Node
         if (!Multiplayer.IsServer())
         {
             GetNode<ServerManager>("/root/ServerManager").EmitSignal(ServerManager.SignalName.PlayerLeft, playerName);
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false)]
+    public void RequestRemoteProperties(string path)
+    {
+        if (Multiplayer.IsServer())
+        {
+            var dict = ConfigManager.LoadProperties(path);
+            var gDict = new Godot.Collections.Dictionary();
+            foreach (var kvp in dict) gDict[kvp.Key] = kvp.Value;
+
+            RpcId(Multiplayer.GetRemoteSenderId(), MethodName.ReceiveRemoteProperties, gDict);
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
+    public void ReceiveRemoteProperties(Godot.Collections.Dictionary props)
+    {
+        EmitSignal(SignalName.RemotePropertiesReceived, props);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false)]
+    public void SaveRemoteProperties(string path, Godot.Collections.Dictionary props)
+    {
+        if (Multiplayer.IsServer())
+        {
+            var dict = new Dictionary<string, string>();
+            foreach (var key in props.Keys) dict[key.ToString()] = props[key].ToString();
+
+            ConfigManager.SaveProperties(path, dict);
         }
     }
 }

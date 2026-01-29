@@ -227,6 +227,7 @@ text = "Configure JVM Flags"
 layout_mode = 2
 
 [node name="ModpackButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Download Modpack"
 

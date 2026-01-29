@@ -29,16 +29,46 @@ public partial class ConfigEditor : Window
     public void Open(string serverPath)
     {
         _serverPath = serverPath;
-        foreach (Node child in _propContainer.GetChildren()) child.QueueFree();
         _inputs.Clear();
+        _serverPath = serverPath;
 
-        var props = ConfigManager.LoadProperties(serverPath);
-        foreach (var kvp in props)
+        NetworkManager nm = GetNode<NetworkManager>("/root/NetworkManager");
+        if (nm.Multiplayer.MultiplayerPeer != null && !nm.Multiplayer.IsServer())
         {
-            AddPropertyInput(kvp.Key, kvp.Value);
+            // Client Mode: Request from Host
+            nm.Rpc(nameof(NetworkManager.RequestRemoteProperties), serverPath);
+            AddLoadingMessage();
+        }
+        else
+        {
+            // Local Mode
+            var props = ConfigManager.LoadProperties(serverPath);
+            foreach (var kvp in props)
+            {
+                AddPropertyInput(kvp.Key, kvp.Value);
+            }
         }
 
         Show();
+    }
+
+    private void AddLoadingMessage()
+    {
+        Label label = new Label();
+        label.Text = "Loading properties from host...";
+        label.HorizontalAlignment = HorizontalAlignment.Center;
+        _propContainer.AddChild(label);
+    }
+
+    public void HandleRemoteProperties(Godot.Collections.Dictionary props)
+    {
+        foreach (Node child in _propContainer.GetChildren()) child.QueueFree();
+        _inputs.Clear();
+
+        foreach (var key in props.Keys)
+        {
+            AddPropertyInput(key.ToString(), props[key].ToString());
+        }
     }
 
     private void AddPropertyInput(string key, string value)
@@ -67,7 +97,18 @@ public partial class ConfigEditor : Window
             newProps[kvp.Key] = kvp.Value.Text;
         }
 
-        ConfigManager.SaveProperties(_serverPath, newProps);
+        NetworkManager nm = GetNode<NetworkManager>("/root/NetworkManager");
+        if (nm.Multiplayer.MultiplayerPeer != null && !nm.Multiplayer.IsServer())
+        {
+            var gDict = new Godot.Collections.Dictionary();
+            foreach (var kvp in newProps) gDict[kvp.Key] = kvp.Value;
+            nm.Rpc(nameof(NetworkManager.SaveRemoteProperties), _serverPath, gDict);
+        }
+        else
+        {
+            ConfigManager.SaveProperties(_serverPath, newProps);
+        }
+
         EmitSignal(SignalName.PropertiesSaved);
         Hide();
     }

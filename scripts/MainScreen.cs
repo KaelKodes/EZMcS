@@ -114,6 +114,7 @@ public partial class MainScreen : Control
         NetworkManager nm = GetNode<NetworkManager>("/root/NetworkManager");
         nm.ConnectionStatusChanged += OnNetworkStatusChanged;
         nm.ConfigurationSynced += OnConfigurationSynced;
+        nm.RemotePropertiesReceived += _configEditor.HandleRemoteProperties;
         nm.Multiplayer.PeerConnected += OnRemotePeerConnected;
     }
 
@@ -313,7 +314,10 @@ public partial class MainScreen : Control
         NetworkManager nm = GetNode<NetworkManager>("/root/NetworkManager");
         bool isClient = nm.Multiplayer.MultiplayerPeer != null && !nm.Multiplayer.IsServer();
 
-        if (sm.IsRunning || (isClient && _statusLabel.Text.Contains("Running")))
+        // Use the label text to determine the perceived state if in client mode
+        bool perceivedRunning = isClient ? (_statusLabel.Text.Contains("Running") || _statusLabel.Text.Contains("Starting")) : sm.IsRunning;
+
+        if (perceivedRunning)
         {
             if (isClient) nm.Rpc(nameof(NetworkManager.RequestStopServer));
             else sm.StopServer();
@@ -345,13 +349,42 @@ public partial class MainScreen : Control
         _remoteMode.Disabled = connected;
         _remoteAddress.Editable = !connected;
         _remotePort.Editable = !connected;
-        if (connected && !isHost)
+
+        if (connected)
         {
-            _setupPanel.Visible = false;
-            _profileSelector.Disabled = true;
-            _statusLabel.Text = "Status: Connected (Syncing...)";
-            _playerList.Clear();
+            if (!isHost)
+            {
+                _setupPanel.Visible = false;
+                _profileSelector.Disabled = true;
+                _statusLabel.Text = "Status: Connected (Syncing...)";
+                _statusLabel.SelfModulate = new Color(1, 1, 1);
+                _playerList.Clear();
+                _consoleOutput.Clear();
+
+                // Disable start/stop button until we receive the real state from host
+                _startStopButton.Disabled = true;
+                _startStopButton.Text = "Syncing...";
+            }
         }
+        else
+        {
+            ResetUI();
+        }
+    }
+
+    private void ResetUI()
+    {
+        _setupPanel.Visible = true;
+        _profileSelector.Disabled = false;
+        _statusLabel.Text = "Status: Stopped";
+        _statusLabel.SelfModulate = new Color(1, 0.2f, 0.2f);
+        _playerList.Clear();
+        _consoleOutput.Clear();
+        _restartNotification.Visible = false;
+        _startStopButton.Text = "Start Server";
+        _startStopButton.Disabled = false;
+
+        RefreshProfiles();
     }
 
     private void OnPlayerItemClicked(long index, Vector2 atPosition, long mouseButtonIndex)
