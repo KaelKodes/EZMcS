@@ -17,6 +17,10 @@ public static class ProfileManager
         public string MaxRam { get; set; }
         public string MinRam { get; set; }
         public string JavaPath { get; set; }
+        public string JvmFlags { get; set; }
+        public string ModsPath { get; set; }
+        public long AffinityMask { get; set; } = -1;
+        public bool UseSmartAffinity { get; set; } = true;
         public DateTime LastUsed { get; set; }
     }
 
@@ -48,6 +52,10 @@ public static class ProfileManager
             existing.MaxRam = profile.MaxRam;
             existing.MinRam = profile.MinRam;
             existing.JavaPath = profile.JavaPath;
+            existing.JvmFlags = profile.JvmFlags;
+            existing.ModsPath = profile.ModsPath;
+            existing.AffinityMask = profile.AffinityMask;
+            existing.UseSmartAffinity = profile.UseSmartAffinity;
             existing.LastUsed = DateTime.Now;
         }
         else

@@ -53,6 +53,12 @@ public partial class FlagsEditor : Window
         }
     }
 
+    public void SetServerPath(string path)
+    {
+        _serverPath = path;
+        LoadFlags();
+    }
+
     public void Open(string serverPath)
     {
         _serverPath = serverPath;

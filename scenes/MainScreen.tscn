@@ -25,6 +25,41 @@ unique_name_in_owner = true
 [node name="FlagsEditor" parent="." instance=ExtResource("5_flags")]
 unique_name_in_owner = true
 
+[node name="ModsDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a Directory"
+size = Vector2i(700, 500)
+ok_button_text = "Select Current Folder"
+file_mode = 2
+access = 2
+
+[node name="AffinityDialog" type="AcceptDialog" parent="."]
+unique_name_in_owner = true
+title = "Manual CPU Affinity"
+size = Vector2i(400, 300)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="AffinityDialog"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 392.0
+offset_bottom = 251.0
+
+[node name="VBox" type="VBoxContainer" parent="AffinityDialog/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WarningLabel" type="Label" parent="AffinityDialog/ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.333333, 0.333333, 1)
+text = "WARNING: Manual affinity can degrade performance if paired incorrectly. 
+Avoid sharing a physical core with two threads unless necessary."
+autowrap_mode = 3
+
+[node name="CoreGrid" type="GridContainer" parent="AffinityDialog/ScrollContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 4
+
 [node name="PlayerMenu" type="PopupMenu" parent="."]
 unique_name_in_owner = true
 item_count = 3
@@ -230,13 +265,26 @@ tooltip_text = "Pins the server to physical cores to reduce micro-stutters and a
 button_pressed = true
 text = "Optimize CPU Affinity"
 
-[node name="HSeparator2" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+[node name="ModsLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+layout_mode = 2
+text = "Custom Mods Path (Optional):"
+
+[node name="HBoxMods" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
 layout_mode = 2
 
-[node name="ModpackButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
-visible = false
+[node name="ModsInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/HBoxMods"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "Download Modpack"
+size_flags_horizontal = 3
+placeholder_text = "Default (./mods)"
+
+[node name="BrowseModsButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/HBoxMods"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "..."
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+layout_mode = 2
 
 [node name="ControlSeparator" type="Control" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)

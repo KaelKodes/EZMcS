@@ -1,10 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 public static class AffinityHelper
 {
+    public class CoreInfo
+    {
+        public int Index { get; set; }
+        public string Type { get; set; } // P-Core, E-Core, CCD0, CCD1, etc.
+        public bool IsLogical { get; set; } // Is it the second thread of an SMT/HT pair?
+        public string GroupName { get; set; }
+    }
+
     [SupportedOSPlatform("windows")]
     public static long GetSmartMask()
     {
@@ -89,6 +98,66 @@ public static class AffinityHelper
         int totalCores = Environment.ProcessorCount / 2;
         if (totalCores > 8) return 6; // Likely a 12-core parts split 6+6
         return totalCores; // Single CCD
+    }
+
+    public static List<CoreInfo> GetCoreTopology()
+    {
+        var topology = new List<CoreInfo>();
+        int logicalCores = Environment.ProcessorCount;
+        string cpuName = GetCpuName().ToLower();
+
+        bool isIntel = cpuName.Contains("intel");
+        bool isAMD = cpuName.Contains("amd") || cpuName.Contains("ryzen");
+
+        if (isIntel && logicalCores > 16)
+        {
+            // Intel Hybrid (12th-14th Gen)
+            int pCoreThreads = GetPCoreThreadCount();
+            for (int i = 0; i < logicalCores; i++)
+            {
+                bool isP = i < pCoreThreads;
+                topology.Add(new CoreInfo
+                {
+                    Index = i,
+                    Type = isP ? "P-Core" : "E-Core",
+                    GroupName = isP ? "Performance Cores" : "Efficiency Cores",
+                    IsLogical = isP && (i % 2 != 0)
+                });
+            }
+        }
+        else if (isAMD)
+        {
+            // AMD CCD Logic
+            int coresPerCCD = GetAMDCoresPerCCD();
+            int threadsPerCCD = coresPerCCD * 2;
+            for (int i = 0; i < logicalCores; i++)
+            {
+                int ccdIndex = i / threadsPerCCD;
+                topology.Add(new CoreInfo
+                {
+                    Index = i,
+                    Type = $"CCD {ccdIndex}",
+                    GroupName = $"Chiplet {ccdIndex}",
+                    IsLogical = (i % 2 != 0)
+                });
+            }
+        }
+        else
+        {
+            // Generic fallback (Assuming SMT pairs 0/1, 2/3...)
+            for (int i = 0; i < logicalCores; i++)
+            {
+                topology.Add(new CoreInfo
+                {
+                    Index = i,
+                    Type = "Core",
+                    GroupName = "Processor",
+                    IsLogical = (i % 2 != 0)
+                });
+            }
+        }
+
+        return topology;
     }
 
     private static string GetCpuName()

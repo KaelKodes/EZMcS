@@ -51,6 +51,14 @@ public partial class MainScreen : Control
     private ProgressBar _serverRamBar;
     private SystemMonitor _systemMonitor;
     private CheckBox _smartAffinity;
+    private LineEdit _modsInput;
+    private Button _browseModsButton;
+    private FileDialog _modsDialog;
+    private AcceptDialog _affinityDialog;
+    private GridContainer _coreGrid;
+
+    private List<string> _commandHistory = new List<string>();
+    private int _historyIndex = -1;
 
     public override void _Ready()
     {
@@ -91,7 +99,11 @@ public partial class MainScreen : Control
         _ramBar = GetNode<ProgressBar>("%RamBar");
         _serverRamBar = GetNode<ProgressBar>("%ServerRamBar");
         _smartAffinity = GetNode<CheckBox>("%SmartAffinity");
-        _smartAffinity = GetNode<CheckBox>("%SmartAffinity");
+        _modsInput = GetNode<LineEdit>("%ModsInput");
+        _browseModsButton = GetNode<Button>("%BrowseModsButton");
+        _modsDialog = GetNode<FileDialog>("%ModsDialog");
+        _affinityDialog = GetNode<AcceptDialog>("%AffinityDialog");
+        _coreGrid = GetNode<GridContainer>("%CoreGrid");
 
         // Add SystemMonitor dynamically
         _systemMonitor = new SystemMonitor();
@@ -101,6 +113,60 @@ public partial class MainScreen : Control
         RefreshProfiles();
         UpdateUIState(false);
         SetSystemMonitorVisibility(false); // Hidden by default
+
+        _commandInput.GrabFocus();
+        _commandInput.GuiInput += OnCommandInputGuiInput;
+
+        // Prevent other UI from taking focus via keyboard
+        SetAllFocusModes(this, FocusModeEnum.None);
+        _commandInput.FocusMode = FocusModeEnum.All;
+        _consoleOutput.FocusMode = FocusModeEnum.Click;
+    }
+
+    private void SetAllFocusModes(Node node, FocusModeEnum mode)
+    {
+        if (node is Control control && control != _commandInput && control != _consoleOutput)
+        {
+            control.FocusMode = mode;
+        }
+        foreach (Node child in node.GetChildren())
+        {
+            SetAllFocusModes(child, mode);
+        }
+    }
+
+    private void OnCommandInputGuiInput(InputEvent @event)
+    {
+        if (@event is InputEventKey keyEvent && keyEvent.Pressed)
+        {
+            if (keyEvent.Keycode == Key.Up)
+            {
+                if (_commandHistory.Count > 0)
+                {
+                    _historyIndex++;
+                    if (_historyIndex >= _commandHistory.Count) _historyIndex = _commandHistory.Count - 1;
+                    _commandInput.Text = _commandHistory[_commandHistory.Count - 1 - _historyIndex];
+                    _commandInput.CaretColumn = _commandInput.Text.Length;
+                }
+                GetViewport().SetInputAsHandled();
+            }
+            else if (keyEvent.Keycode == Key.Down)
+            {
+                _historyIndex--;
+                if (_historyIndex < -1) _historyIndex = -1;
+
+                if (_historyIndex == -1)
+                {
+                    _commandInput.Text = "";
+                }
+                else
+                {
+                    _commandInput.Text = _commandHistory[_commandHistory.Count - 1 - _historyIndex];
+                }
+                _commandInput.CaretColumn = _commandInput.Text.Length;
+                GetViewport().SetInputAsHandled();
+            }
+        }
     }
 
     private void InitializeSignals()
@@ -136,6 +202,83 @@ public partial class MainScreen : Control
         nm.SystemStatsReceived += OnSystemStatsReceived;
 
         _systemMonitor.StatsUpdated += OnLocalStatsUpdated;
+
+        _browseModsButton.Pressed += () => _modsDialog.PopupCentered();
+        _modsDialog.DirSelected += (path) => _modsInput.Text = path;
+
+        // Add "Manual" button next to SmartAffinity
+        var manualBtn = new Button { Text = "Manual", Flat = true, ThemeTypeVariation = "HeaderSmall" };
+        manualBtn.Pressed += ShowAffinityPicker;
+        _smartAffinity.GetParent().AddChild(manualBtn);
+
+        InitializeCoreGrid();
+    }
+
+    private void InitializeCoreGrid()
+    {
+        foreach (var child in _coreGrid.GetChildren()) child.QueueFree();
+
+        var topology = AffinityHelper.GetCoreTopology();
+        string lastGroup = "";
+
+        foreach (var core in topology)
+        {
+            if (core.GroupName != lastGroup)
+            {
+                // Add a group header span
+                var separator = new HSeparator { CustomMinimumSize = new Vector2(0, 10) };
+                _coreGrid.AddChild(separator);
+
+                var label = new Label
+                {
+                    Text = core.GroupName,
+                    ThemeTypeVariation = "HeaderSmall",
+                    Modulate = new Color(0.7f, 0.7f, 1.0f)
+                };
+                _coreGrid.AddChild(label);
+
+                // Add two spacers to fill the 4-column grid row for the header
+                _coreGrid.AddChild(new Control());
+                _coreGrid.AddChild(new Control());
+
+                lastGroup = core.GroupName;
+            }
+
+            string suffix = core.IsLogical ? " (L)" : " (P)";
+            if (core.Type == "E-Core") suffix = ""; // E-cores don't have L/P distinction usually
+
+            var cb = new CheckBox
+            {
+                Text = $"#{core.Index}{suffix}",
+                Name = $"Core{core.Index}",
+                TooltipText = $"{core.Type} thread"
+            };
+
+            // Dim logical threads slightly to make physical cores stand out
+            if (core.IsLogical) cb.Modulate = new Color(0.8f, 0.8f, 0.8f, 0.7f);
+
+            _coreGrid.AddChild(cb);
+        }
+    }
+
+    private void ShowAffinityPicker()
+    {
+        _affinityDialog.PopupCentered();
+    }
+
+    private long GetManualAffinityMask()
+    {
+        long mask = 0;
+        int i = 0;
+        foreach (Node child in _coreGrid.GetChildren())
+        {
+            if (child is CheckBox cb && cb.ButtonPressed)
+            {
+                mask |= (1L << i);
+            }
+            i++;
+        }
+        return mask == 0 ? -1 : mask; // -1 means use smart or all
     }
 
     private void RefreshProfiles()
@@ -163,7 +306,26 @@ public partial class MainScreen : Control
             _maxRamInput.Text = p.MaxRam;
             _minRamInput.Text = p.MinRam;
             _javaInput.Text = p.JavaPath;
+            _modsInput.Text = p.ModsPath;
+            _flagsEditor.SetServerPath(p.Path);
+            _smartAffinity.ButtonPressed = p.UseSmartAffinity;
+            SetCoreGridFromMask(p.AffinityMask);
+
             OnLogReceived($"[System] Loaded profile: {name}", false);
+        }
+    }
+
+    private void SetCoreGridFromMask(long mask)
+    {
+        InitializeCoreGrid(); // Ensure grid exists
+        if (mask == -1) return;
+
+        for (int i = 0; i < _coreGrid.GetChildCount(); i++)
+        {
+            if (_coreGrid.GetChild(i) is CheckBox cb)
+            {
+                cb.ButtonPressed = (mask & (1L << i)) != 0;
+            }
         }
     }
 
@@ -182,7 +344,11 @@ public partial class MainScreen : Control
             Jar = _jarInput.Text,
             MaxRam = _maxRamInput.Text,
             MinRam = _minRamInput.Text,
-            JavaPath = _javaInput.Text
+            JavaPath = _javaInput.Text,
+            ModsPath = _modsInput.Text,
+            JvmFlags = _flagsEditor.GetFormattedFlags(),
+            UseSmartAffinity = _smartAffinity.ButtonPressed,
+            AffinityMask = GetManualAffinityMask()
         };
 
         ProfileManager.SaveProfile(p);
@@ -329,7 +495,21 @@ public partial class MainScreen : Control
     private void OnPlayerJoined(string playerName) { _playerList.AddItem(playerName); OnLogReceived($"[System] Player {playerName} joined.", false); }
     private void OnPlayerLeft(string playerName) { for (int i = 0; i < _playerList.ItemCount; i++) if (_playerList.GetItemText(i) == playerName) { _playerList.RemoveItem(i); break; } OnLogReceived($"[System] Player {playerName} left.", false); }
 
-    private void OnCommandSubmitted(string command) { if (string.IsNullOrWhiteSpace(command)) return; SendCommand(command); _commandInput.Clear(); }
+    private void OnCommandSubmitted(string command)
+    {
+        if (string.IsNullOrWhiteSpace(command)) return;
+
+        // Add to history if unique or different from last
+        if (_commandHistory.Count == 0 || _commandHistory[_commandHistory.Count - 1] != command)
+        {
+            _commandHistory.Add(command);
+            if (_commandHistory.Count > 50) _commandHistory.RemoveAt(0); // Cap history
+        }
+
+        _historyIndex = -1;
+        SendCommand(command);
+        _commandInput.Clear();
+    }
 
     private void SendCommand(string command)
     {
@@ -357,14 +537,19 @@ public partial class MainScreen : Control
             if (isClient) nm.Rpc(nameof(NetworkManager.RequestStartServer), _pathInput.Text, _jarInput.Text, _maxRamInput.Text, _minRamInput.Text, _javaInput.Text, _flagsEditor.GetFormattedFlags());
             else
             {
-                sm.StartServer(_pathInput.Text, _jarInput.Text, _maxRamInput.Text, _minRamInput.Text, _javaInput.Text, _flagsEditor.GetFormattedFlags());
+                sm.StartServer(_pathInput.Text, _jarInput.Text, _maxRamInput.Text, _minRamInput.Text, _javaInput.Text, _flagsEditor.GetFormattedFlags(), _modsInput.Text);
                 SyncSettingsToNetwork();
 
-                if (_smartAffinity.ButtonPressed)
+                // Apply Affinity
+                GetTree().CreateTimer(0.5f).Connect("timeout", Callable.From(() =>
                 {
-                    // Delay slightly to ensure process is fully initialized
-                    GetTree().CreateTimer(0.5f).Connect("timeout", Callable.From(() => sm.SetSmartAffinity()));
-                }
+                    if (_smartAffinity.ButtonPressed) sm.SetSmartAffinity();
+                    else
+                    {
+                        long mask = GetManualAffinityMask();
+                        if (mask != -1) sm.SetManualAffinity(mask);
+                    }
+                }));
             }
         }
     }

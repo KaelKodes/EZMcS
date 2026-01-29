@@ -29,16 +29,26 @@ public partial class ServerManager : Node
     public Process ActiveProcess => _serverProcess;
     public float MaxRamMb { get; private set; } = 4096; // Default 4G
 
-    public void StartServer(string path, string jar, string maxRam = "4G", string minRam = "2G", string javaPath = "", string extraFlags = "")
+    public void StartServer(string path, string jar, string maxRam = "4G", string minRam = "2G", string javaPath = "", string extraFlags = "", string modsPath = "")
     {
         if (IsRunning) return;
 
         _serverPath = path;
         _serverJar = jar;
-        _serverPath = path;
-        _serverJar = jar;
         _maxRam = maxRam;
         _minRam = minRam;
+
+        // Construct mods directory flag if specified
+        string modsFlag = "";
+        if (!string.IsNullOrWhiteSpace(modsPath) && Directory.Exists(modsPath))
+        {
+            // Fabric/Quilt common flag. Forge/Neoforge use different mechanisms usually, 
+            // but -Dfabric.modsDir covers most modern "lightweight" modpacks.
+            modsFlag = $" -Dfabric.modsDir=\"{modsPath}\"";
+            EmitSignal(SignalName.LogReceived, $"[System] Custom Mods Path: {modsPath}", false);
+        }
+
+        string fullExtraFlags = extraFlags + modsFlag;
 
         // Parse Max RAM for Monitor
         MaxRamMb = ParseRamToMb(maxRam);
@@ -67,7 +77,7 @@ public partial class ServerManager : Node
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = _javaPath,
-            Arguments = $"-Xmx{_maxRam} -Xms{_minRam} {extraFlags} -jar \"{_serverJar}\" nogui",
+            Arguments = $"-Xmx{_maxRam} -Xms{_minRam} {fullExtraFlags} -jar \"{_serverJar}\" nogui",
             WorkingDirectory = _serverPath,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
@@ -238,13 +248,19 @@ public partial class ServerManager : Node
     [SupportedOSPlatform("windows")]
     public void SetSmartAffinity()
     {
+        SetManualAffinity(AffinityHelper.GetSmartMask());
+    }
+
+    [SupportedOSPlatform("windows")]
+    public void SetManualAffinity(long mask)
+    {
         if (IsRunning && _serverProcess != null && !_serverProcess.HasExited)
         {
             try
             {
-                long mask = AffinityHelper.GetSmartMask();
+                if (mask <= 0) return;
                 _serverProcess.ProcessorAffinity = (IntPtr)mask;
-                EmitSignal(SignalName.LogReceived, $"[System] CPU Affinity optimized (Mask: {mask})", false);
+                EmitSignal(SignalName.LogReceived, $"[System] CPU Affinity set (Mask: {mask})", false);
             }
             catch (Exception ex)
             {
