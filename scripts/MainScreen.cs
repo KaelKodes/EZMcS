@@ -213,9 +213,19 @@ public partial class MainScreen : Control
 
     private void UpdateUIState(bool running)
     {
-        // Toggle the "Setup" panel based on whether the server is running
-        // If running, we hide the clutter. If stopped, we show it.
-        _setupPanel.Visible = !running;
+        // Selectively hide clutter while keeping RAM and Flags visible
+        _pathInput.GetParent().GetChild<Label>(_pathInput.GetIndex() - 1).Visible = !running; // PathLabel
+        _pathInput.Visible = !running;
+
+        Node hboxJar = GetNode("%AnalyzeButton").GetParent();
+        hboxJar.GetParent().GetChild<Label>(hboxJar.GetIndex() - 1).Visible = !running; // JarLabel
+        ((Control)hboxJar).Visible = !running;
+
+        _javaInput.GetParent().GetChild<Label>(_javaInput.GetIndex() - 1).Visible = !running; // JavaLabel
+        _javaInput.Visible = !running;
+
+        // Keep the main panel visible so RAM and Flags can be seen
+        _setupPanel.Visible = true;
         _profileSelector.Disabled = running;
         _saveProfileButton.Disabled = running;
     }
@@ -354,7 +364,7 @@ public partial class MainScreen : Control
         {
             if (!isHost)
             {
-                _setupPanel.Visible = false;
+                UpdateUIState(true); // Hide clutter but keep RAM visible for clients
                 _profileSelector.Disabled = true;
                 _statusLabel.Text = "Status: Connected (Syncing...)";
                 _statusLabel.SelfModulate = new Color(1, 1, 1);
