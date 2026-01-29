@@ -9,4 +9,7 @@
     <Version>1.0.0</Version>
     <Description>A Godot-based Minecraft Server Management Tool</Description>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.2" />
+  </ItemGroup>
 </Project>

@@ -42,8 +42,8 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -152.0
-offset_right = -152.0
+offset_left = -160.0
+offset_right = -160.0
 grow_horizontal = 0
 grow_vertical = 2
 
@@ -223,6 +223,13 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Configure JVM Flags"
 
+[node name="SmartAffinity" type="CheckBox" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Pins the server to physical cores to reduce micro-stutters and avoid OS contention."
+button_pressed = true
+text = "Optimize CPU Affinity"
+
 [node name="HSeparator2" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
 layout_mode = 2
 
@@ -321,3 +328,55 @@ placeholder_text = "Port (8181)"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Initialize Network"
+
+[node name="HSeparator5" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+layout_mode = 2
+
+[node name="SystemLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+layout_mode = 2
+text = "System Monitor:"
+
+[node name="CpuBox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/CpuBox"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "CPU:"
+
+[node name="CpuBar" type="ProgressBar" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/CpuBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 1.0
+
+[node name="RamBox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/RamBox"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "RAM:"
+
+[node name="RamBar" type="ProgressBar" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/RamBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 1.0
+
+[node name="ServerRamBox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/ServerRamBox"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "Svr:"
+
+[node name="ServerRamBar" type="ProgressBar" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/ServerRamBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+step = 1.0

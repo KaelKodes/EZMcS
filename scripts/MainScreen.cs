@@ -46,6 +46,12 @@ public partial class MainScreen : Control
     private PopupMenu _playerMenu;
     private string _selectedPlayer;
 
+    private ProgressBar _cpuBar;
+    private ProgressBar _ramBar;
+    private ProgressBar _serverRamBar;
+    private SystemMonitor _systemMonitor;
+    private CheckBox _smartAffinity;
+
     public override void _Ready()
     {
         _consoleOutput = GetNode<RichTextLabel>("%ConsoleOutput");
@@ -81,9 +87,20 @@ public partial class MainScreen : Control
         _flagsEditor = GetNode<FlagsEditor>("%FlagsEditor");
         _playerMenu = GetNode<PopupMenu>("%PlayerMenu");
 
+        _cpuBar = GetNode<ProgressBar>("%CpuBar");
+        _ramBar = GetNode<ProgressBar>("%RamBar");
+        _serverRamBar = GetNode<ProgressBar>("%ServerRamBar");
+        _smartAffinity = GetNode<CheckBox>("%SmartAffinity");
+        _smartAffinity = GetNode<CheckBox>("%SmartAffinity");
+
+        // Add SystemMonitor dynamically
+        _systemMonitor = new SystemMonitor();
+        AddChild(_systemMonitor);
+
         InitializeSignals();
         RefreshProfiles();
         UpdateUIState(false);
+        SetSystemMonitorVisibility(false); // Hidden by default
     }
 
     private void InitializeSignals()
@@ -116,6 +133,9 @@ public partial class MainScreen : Control
         nm.ConfigurationSynced += OnConfigurationSynced;
         nm.RemotePropertiesReceived += _configEditor.HandleRemoteProperties;
         nm.Multiplayer.PeerConnected += OnRemotePeerConnected;
+        nm.SystemStatsReceived += OnSystemStatsReceived;
+
+        _systemMonitor.StatsUpdated += OnLocalStatsUpdated;
     }
 
     private void RefreshProfiles()
@@ -335,7 +355,17 @@ public partial class MainScreen : Control
         else
         {
             if (isClient) nm.Rpc(nameof(NetworkManager.RequestStartServer), _pathInput.Text, _jarInput.Text, _maxRamInput.Text, _minRamInput.Text, _javaInput.Text, _flagsEditor.GetFormattedFlags());
-            else { sm.StartServer(_pathInput.Text, _jarInput.Text, _maxRamInput.Text, _minRamInput.Text, _javaInput.Text, _flagsEditor.GetFormattedFlags()); SyncSettingsToNetwork(); }
+            else
+            {
+                sm.StartServer(_pathInput.Text, _jarInput.Text, _maxRamInput.Text, _minRamInput.Text, _javaInput.Text, _flagsEditor.GetFormattedFlags());
+                SyncSettingsToNetwork();
+
+                if (_smartAffinity.ButtonPressed)
+                {
+                    // Delay slightly to ensure process is fully initialized
+                    GetTree().CreateTimer(0.5f).Connect("timeout", Callable.From(() => sm.SetSmartAffinity()));
+                }
+            }
         }
     }
 
@@ -345,8 +375,17 @@ public partial class MainScreen : Control
         if (nm.Multiplayer.MultiplayerPeer != null) { nm.Disconnect(); return; }
         int mode = _remoteMode.Selected;
         int port = 8181; int.TryParse(_remotePort.Text, out port);
-        if (mode == 1) { nm.CreateHost(port); SyncSettingsToNetwork(); }
-        else if (mode == 2) nm.ConnectToHost(_remoteAddress.Text ?? "127.0.0.1", port);
+        if (mode == 1)
+        {
+            nm.CreateHost(port);
+            SyncSettingsToNetwork();
+            SetSystemMonitorVisibility(true); // Show local stats when hosting
+        }
+        else if (mode == 2)
+        {
+            nm.ConnectToHost(_remoteAddress.Text ?? "127.0.0.1", port);
+            SetSystemMonitorVisibility(true); // Show remote stats when connected
+        }
     }
 
     private void OnConfigButtonPressed() { if (string.IsNullOrEmpty(_pathInput.Text)) return; _configEditor.Open(_pathInput.Text); }
@@ -362,6 +401,7 @@ public partial class MainScreen : Control
 
         if (connected)
         {
+            SetSystemMonitorVisibility(true);
             if (!isHost)
             {
                 UpdateUIState(true); // Hide clutter but keep RAM visible for clients
@@ -378,7 +418,32 @@ public partial class MainScreen : Control
         }
         else
         {
+            SetSystemMonitorVisibility(false);
             ResetUI();
+        }
+    }
+
+    private void SetSystemMonitorVisibility(bool visible)
+    {
+        // Hide/Show the HBoxContainers (CpuBox and RamBox)
+        // Casting the parent Node back to Control to access Visible property
+        if (_cpuBar.GetParent() is Control cpuBox) cpuBox.Visible = visible;
+        if (_ramBar.GetParent() is Control ramBox) ramBox.Visible = visible;
+        if (_serverRamBar.GetParent() is Control serverRamBox) serverRamBox.Visible = visible;
+
+        // Hide/Show the "System Monitor:" Label which is above the boxes
+        // MonitorPanel is the parent of the box (CpuBox).
+        Node monitorPanel = _cpuBar.GetParent().GetParent();
+
+        // The label is one index before the CpuBox.
+        int cpuIndex = _cpuBar.GetParent().GetIndex();
+        if (cpuIndex > 0)
+        {
+            Node systemLabel = monitorPanel.GetChild(cpuIndex - 1);
+            if (systemLabel is Control ctrl)
+            {
+                ctrl.Visible = visible;
+            }
         }
     }
 
@@ -421,5 +486,32 @@ public partial class MainScreen : Control
     }
 
     private void OnPlayerItemActivated(long index) { _selectedPlayer = _playerList.GetItemText((int)index); _commandInput.Text = $"/msg {_selectedPlayer} "; _commandInput.GrabFocus(); _commandInput.CaretColumn = _commandInput.Text.Length; }
+
+    private void OnLocalStatsUpdated(float cpu, float ram, float serverRam)
+    {
+        NetworkManager nm = GetNode<NetworkManager>("/root/NetworkManager");
+        bool isClient = nm.Multiplayer.MultiplayerPeer != null && !nm.Multiplayer.IsServer();
+
+        // If we are a client, we want to see the HOST's stats, not our own local ones.
+        if (isClient) return;
+
+        _cpuBar.Value = cpu;
+        _ramBar.Value = ram;
+        _serverRamBar.Value = serverRam;
+
+        // If hosting, broadcast to clients
+        if (nm.Multiplayer.IsServer())
+        {
+            nm.Rpc(nameof(NetworkManager.ReceiveRemoteSystemStats), cpu, ram, serverRam);
+        }
+    }
+
+    private void OnSystemStatsReceived(float cpu, float ram, float serverRam)
+    {
+        _cpuBar.Value = cpu;
+        _ramBar.Value = ram;
+        _serverRamBar.Value = serverRam;
+    }
+
     private void OnPlayerMenuIdPressed(long id) { if (string.IsNullOrEmpty(_selectedPlayer)) return; switch (id) { case 0: SendCommand($"kick {_selectedPlayer}"); break; case 1: SendCommand($"ban {_selectedPlayer}"); break; case 2: SendCommand($"op {_selectedPlayer}"); break; } }
 }

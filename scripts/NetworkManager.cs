@@ -10,6 +10,7 @@ public partial class NetworkManager : Node
     [Signal] public delegate void ConnectionStatusChangedEventHandler(bool connected, bool isHost);
     [Signal] public delegate void ConfigurationSyncedEventHandler(string path, string jar, string maxRam, string minRam, string javaPath, string extraFlags);
     [Signal] public delegate void RemotePropertiesReceivedEventHandler(Godot.Collections.Dictionary props);
+    [Signal] public delegate void SystemStatsReceivedEventHandler(float cpu, float ram, float serverRam);
 
     public override void _Ready()
     {
@@ -238,6 +239,15 @@ public partial class NetworkManager : Node
             foreach (var key in props.Keys) dict[key.ToString()] = props[key].ToString();
 
             ConfigManager.SaveProperties(path, dict);
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+    public void ReceiveRemoteSystemStats(float cpu, float ram, float serverRam)
+    {
+        if (!Multiplayer.IsServer())
+        {
+            EmitSignal(SignalName.SystemStatsReceived, cpu, ram, serverRam);
         }
     }
 }
