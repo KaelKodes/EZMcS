@@ -56,6 +56,7 @@ public partial class MainScreen : Control
     private FileDialog _modsDialog;
     private AcceptDialog _affinityDialog;
     private GridContainer _coreGrid;
+    private Button _optimizeManualButton;
 
     private List<string> _commandHistory = new List<string>();
     private int _historyIndex = -1;
@@ -104,6 +105,7 @@ public partial class MainScreen : Control
         _modsDialog = GetNode<FileDialog>("%ModsDialog");
         _affinityDialog = GetNode<AcceptDialog>("%AffinityDialog");
         _coreGrid = GetNode<GridContainer>("%CoreGrid");
+        _optimizeManualButton = GetNode<Button>("%OptimizeManualButton");
 
         // Add SystemMonitor dynamically
         _systemMonitor = new SystemMonitor();
@@ -213,6 +215,7 @@ public partial class MainScreen : Control
 
         _browseModsButton.Pressed += () => _modsDialog.PopupCentered();
         _modsDialog.DirSelected += (path) => _modsInput.Text = path;
+        _optimizeManualButton.Pressed += OnOptimizeManualPressed;
 
         // Add "Manual" button next to SmartAffinity
         var manualBtn = new Button { Text = "Manual", Flat = true, ThemeTypeVariation = "HeaderSmall" };
@@ -272,6 +275,13 @@ public partial class MainScreen : Control
     private void ShowAffinityPicker()
     {
         _affinityDialog.PopupCentered();
+    }
+
+    private void OnOptimizeManualPressed()
+    {
+        long smartMask = AffinityHelper.GetSmartMask();
+        SetCoreGridFromMask(smartMask);
+        OnLogReceived("[System] Manual grid populated with optimized physical core mask.", false);
     }
 
     private long GetManualAffinityMask()

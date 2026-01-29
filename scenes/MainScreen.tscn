@@ -36,26 +36,38 @@ access = 2
 [node name="AffinityDialog" type="AcceptDialog" parent="."]
 unique_name_in_owner = true
 title = "Manual CPU Affinity"
-size = Vector2i(400, 300)
+size = Vector2i(450, 400)
 
-[node name="ScrollContainer" type="ScrollContainer" parent="AffinityDialog"]
+[node name="VBoxMain" type="VBoxContainer" parent="AffinityDialog"]
 offset_left = 8.0
 offset_top = 8.0
-offset_right = 392.0
-offset_bottom = 251.0
+offset_right = 442.0
+offset_bottom = 351.0
 
-[node name="VBox" type="VBoxContainer" parent="AffinityDialog/ScrollContainer"]
+[node name="HBoxTools" type="HBoxContainer" parent="AffinityDialog/VBoxMain"]
+layout_mode = 2
+
+[node name="OptimizeManualButton" type="Button" parent="AffinityDialog/VBoxMain/HBoxTools"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Auto-Optimize (Smart Core Selection)"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="AffinityDialog/VBoxMain"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="AffinityDialog/VBoxMain/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="WarningLabel" type="Label" parent="AffinityDialog/ScrollContainer/VBox"]
+[node name="WarningLabel" type="Label" parent="AffinityDialog/VBoxMain/ScrollContainer/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.333333, 0.333333, 1)
 text = "WARNING: Manual affinity can degrade performance if paired incorrectly. 
 Avoid sharing a physical core with two threads unless necessary."
 autowrap_mode = 3
 
-[node name="CoreGrid" type="GridContainer" parent="AffinityDialog/ScrollContainer/VBox"]
+[node name="CoreGrid" type="GridContainer" parent="AffinityDialog/VBoxMain/ScrollContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 columns = 4
@@ -90,10 +102,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1005.3331
-offset_top = -323.0
-offset_right = -83.33313
-offset_bottom = 325.0
+offset_left = -1005.2058
+offset_top = -323.00003
+offset_right = -83.20581
+offset_bottom = 324.99997
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.9599997, 1)
@@ -260,13 +272,6 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Configure JVM Flags"
 
-[node name="SmartAffinity" type="CheckBox" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-tooltip_text = "Pins the server to physical cores to reduce micro-stutters and avoid OS contention."
-button_pressed = true
-text = "Optimize CPU Affinity"
-
 [node name="ModsLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "Custom Mods Path (Optional):"
@@ -283,7 +288,15 @@ placeholder_text = "Default (./mods)"
 [node name="BrowseModsButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/HBoxMods"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "..."
+tooltip_text = "Browse Mods Folder"
+text = "🔍"
+
+[node name="SmartAffinity" type="CheckBox" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Pins the server to physical cores to reduce micro-stutters and avoid OS contention."
+button_pressed = true
+text = "Optimize CPU Affinity"
 
 [node name="HSeparator2" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
 layout_mode = 2
