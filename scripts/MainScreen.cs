@@ -376,13 +376,26 @@ public partial class MainScreen : Control
     {
         _setupPanel.Visible = true;
         _profileSelector.Disabled = false;
-        _statusLabel.Text = "Status: Stopped";
-        _statusLabel.SelfModulate = new Color(1, 0.2f, 0.2f);
-        _playerList.Clear();
-        _consoleOutput.Clear();
         _restartNotification.Visible = false;
-        _startStopButton.Text = "Start Server";
-        _startStopButton.Disabled = false;
+
+        ServerManager sm = GetNode<ServerManager>("/root/ServerManager");
+        if (!sm.IsRunning)
+        {
+            _statusLabel.Text = "Status: Stopped";
+            _statusLabel.SelfModulate = new Color(1, 0.2f, 0.2f);
+            _playerList.Clear();
+            _consoleOutput.Clear();
+            _startStopButton.Text = "Start Server";
+            _startStopButton.Disabled = false;
+        }
+        else
+        {
+            // Server is still running locally as host
+            _statusLabel.Text = "Status: Running";
+            _statusLabel.SelfModulate = new Color(0.2f, 1.0f, 0.2f);
+            _startStopButton.Text = "Stop Server";
+            _startStopButton.Disabled = false;
+        }
 
         RefreshProfiles();
     }
