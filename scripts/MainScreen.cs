@@ -127,7 +127,15 @@ public partial class MainScreen : Control
     {
         if (node is Control control && control != _commandInput && control != _consoleOutput)
         {
-            control.FocusMode = mode;
+            // Allow clicking to focus LineEdits and Buttons, but not arrow-key navigation
+            if (control is LineEdit || control is Button || control is CheckBox || control is ItemList || control is OptionButton)
+            {
+                control.FocusMode = FocusModeEnum.Click;
+            }
+            else
+            {
+                control.FocusMode = mode;
+            }
         }
         foreach (Node child in node.GetChildren())
         {
