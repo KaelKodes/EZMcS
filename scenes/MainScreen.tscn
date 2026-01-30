@@ -335,7 +335,6 @@ anchor_bottom = 1.0
 offset_left = -98.0
 offset_top = 7.0
 offset_right = 96.0
-offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 10
@@ -509,9 +508,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 step = 1.0
 
-[node name="ThemeDrop" type="OptionButton" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="HBoxContainer" type="VBoxContainer" parent="Panel/MonitorColumn/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="ThemeDrop" type="OptionButton" parent="Panel/MonitorColumn/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
 alignment = 1
 selected = 0
 item_count = 4
@@ -521,5 +526,12 @@ popup/item_1/text = "Godot"
 popup/item_1/id = 1
 popup/item_2/text = "Fantasy"
 popup/item_2/id = 2
-popup/item_3/text = "Surprise"
+popup/item_3/text = "Cyberblock"
 popup/item_3/id = 3
+
+[node name="VersionLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+text = " 0.0.8"
+horizontal_alignment = 1
+vertical_alignment = 2
