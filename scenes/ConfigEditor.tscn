@@ -1,13 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8d9e0f1g2h3i"]
+[gd_scene load_steps=3 format=3 uid="uid://c8eae0f1g2h3i"]
 
 [ext_resource type="Script" path="res://scripts/ConfigEditor.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://c7t8sas0t1u2v" path="res://resources/main_theme.tres" id="2_theme"]
 
 [node name="ConfigEditor" type="Window"]
-script = ExtResource("1_script")
 title = "Server Configuration"
 initial_position = 2
 size = Vector2i(400, 500)
 visible = false
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
 
 [node name="Panel" type="Panel" parent="."]
 anchors_preset = 15

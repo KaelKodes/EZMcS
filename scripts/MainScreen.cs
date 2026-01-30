@@ -57,6 +57,7 @@ public partial class MainScreen : Control
     private AcceptDialog _affinityDialog;
     private GridContainer _coreGrid;
     private Button _optimizeManualButton;
+    private Button _manualAffinityButton;
 
     private List<string> _commandHistory = new List<string>();
     private int _historyIndex = -1;
@@ -106,6 +107,7 @@ public partial class MainScreen : Control
         _affinityDialog = GetNode<AcceptDialog>("%AffinityDialog");
         _coreGrid = GetNode<GridContainer>("%CoreGrid");
         _optimizeManualButton = GetNode<Button>("%OptimizeManualButton");
+        _manualAffinityButton = GetNode<Button>("%ManualAffinityButton");
 
         // Add SystemMonitor dynamically
         _systemMonitor = new SystemMonitor();
@@ -216,11 +218,7 @@ public partial class MainScreen : Control
         _browseModsButton.Pressed += () => _modsDialog.PopupCentered();
         _modsDialog.DirSelected += (path) => _modsInput.Text = path;
         _optimizeManualButton.Pressed += OnOptimizeManualPressed;
-
-        // Add "Manual" button next to SmartAffinity
-        var manualBtn = new Button { Text = "Manual", Flat = true, ThemeTypeVariation = "HeaderSmall" };
-        manualBtn.Pressed += ShowAffinityPicker;
-        _smartAffinity.GetParent().AddChild(manualBtn);
+        _manualAffinityButton.Pressed += ShowAffinityPicker;
 
         InitializeCoreGrid();
     }

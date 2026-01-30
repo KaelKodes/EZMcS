@@ -84,38 +84,31 @@ item_2/id = 2
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 396.0
-offset_top = 3.0517578e-05
-offset_right = 396.0
-offset_bottom = 3.0517578e-05
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.9600024, 1)
-
-[node name="HSplitContainer" type="HSplitContainer" parent="Panel"]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1005.2058
-offset_top = -323.00003
-offset_right = -83.20581
-offset_bottom = 324.99997
+offset_right = -1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.9599997, 1)
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 634.20636
+offset_bottom = -12.844971
+grow_vertical = 2
+scale = Vector2(0.95710164, 1.0186489)
 split_offset = 800
 
 [node name="ConsoleSide" type="VBoxContainer" parent="Panel/HSplitContainer"]
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/HSplitContainer/ConsoleSide"]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
@@ -149,42 +142,49 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter server command..."
 
-[node name="Sidebar" type="Panel" parent="Panel/HSplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.25
-
-[node name="MarginContainer" type="MarginContainer" parent="Panel/HSplitContainer/Sidebar"]
+[node name="SetupColumn" type="Panel" parent="Panel"]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -28.211731
-offset_right = 348.78827
-offset_bottom = -1.0
+offset_left = 601.0
+offset_top = 4.0
+offset_right = -149.9989
+offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.9166666, 1)
+scale = Vector2(0.8399976, 1)
+size_flags_horizontal = 4
+theme_type_variation = &"SidebarPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/SetupColumn"]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -203.5
+offset_right = 203.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Hbox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/SetupColumn/MarginContainer"]
 layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox"]
-layout_mode = 2
+size_flags_horizontal = 4
 theme_override_constants/separation = 8
 
-[node name="ProfileLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+[node name="ProfileLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Server Profile:"
 
-[node name="HBoxProfile" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+[node name="HBoxProfile" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ProfileSelector" type="OptionButton" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/HBoxProfile"]
+[node name="ProfileSelector" type="OptionButton" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/HBoxProfile"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -192,140 +192,181 @@ item_count = 1
 popup/item_0/text = "New Profile..."
 popup/item_0/id = 0
 
-[node name="SaveProfileButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/HBoxProfile"]
+[node name="SaveProfileButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/HBoxProfile"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "💾"
 
-[node name="HSeparator1" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+[node name="HSeparator1" type="HSeparator" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="SetupPanel" type="VBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+[node name="SetupPanel" type="VBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="PathLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="PathLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "Server Path:"
 
-[node name="PathInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="PathInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "C:/Minecraft/Server"
 
-[node name="JarLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="JarLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "JAR Name:"
 
-[node name="HBoxJar" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="HBoxJar" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 
-[node name="JarInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/HBoxJar"]
+[node name="JarInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxJar"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "fabric-server.jar"
 
-[node name="AnalyzeButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/HBoxJar"]
+[node name="AnalyzeButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxJar"]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Analyze JAR & Java"
 text = "🔍"
 
-[node name="RamLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="RamLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "RAM (Max/Min):"
 
-[node name="RamBox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="RamBox" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 
-[node name="MaxRamInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/RamBox"]
+[node name="MaxRamInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/RamBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "4G"
 placeholder_text = "Max (4G)"
 
-[node name="MinRamInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/RamBox"]
+[node name="MinRamInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/RamBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "2G"
 placeholder_text = "Min (2G)"
 
-[node name="JavaLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="JavaLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "Java Path (Optional):"
 
-[node name="JavaInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="JavaInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Auto"
 
-[node name="FlagsLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="FlagsLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "JVM Optimization:"
 
-[node name="FlagsButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="FlagsButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Configure JVM Flags"
 
-[node name="ModsLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="ModsLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "Custom Mods Path (Optional):"
 
-[node name="HBoxMods" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="HBoxMods" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 
-[node name="ModsInput" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/HBoxMods"]
+[node name="ModsInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxMods"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Default (./mods)"
 
-[node name="BrowseModsButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel/HBoxMods"]
+[node name="BrowseModsButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxMods"]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Browse Mods Folder"
 text = "🔍"
 
-[node name="SmartAffinity" type="CheckBox" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer/SetupPanel"]
+[node name="HBoxAffinity" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
+layout_mode = 2
+
+[node name="SmartAffinity" type="CheckBox" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxAffinity"]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Pins the server to physical cores to reduce micro-stutters and avoid OS contention."
 button_pressed = true
 text = "Optimize CPU Affinity"
 
-[node name="HSeparator2" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+[node name="ManualAffinityButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxAffinity"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeaderSmall"
+text = "Manually set CPU Affinity"
+flat = true
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ControlSeparator" type="Control" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+[node name="ControlSeparator" type="Control" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="PlayerLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+[node name="PlayerLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Players Online:"
 
-[node name="PlayerList" type="ItemList" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/VBoxContainer"]
+[node name="PlayerList" type="ItemList" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MonitorPanel" type="VBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox"]
+[node name="MonitorColumn" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -213.0
+offset_top = 4.0
+offset_right = -7.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SidebarPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MonitorColumn"]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -97.0
+offset_right = 97.0
+offset_bottom = -209.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="MonitorPanel" type="VBoxContainer" parent="Panel/MonitorColumn/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="StatusLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="StatusLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Status: Stopped"
 horizontal_alignment = 1
 
-[node name="RestartNotification" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="RestartNotification" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -333,38 +374,38 @@ theme_override_colors/font_color = Color(1, 0.8, 0, 1)
 text = "⚠️ Restart required"
 horizontal_alignment = 1
 
-[node name="StartStopButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="StartStopButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Start Server"
 
-[node name="HSeparator3" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="HSeparator3" type="HSeparator" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 
-[node name="ToolsLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="ToolsLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 text = "Management Tools:"
 
-[node name="ConfigButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="ConfigButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Edit server.properties"
 
-[node name="ModpackButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="ModpackButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Install Modpack"
 
-[node name="HSeparator4" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="HSeparator4" type="HSeparator" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 
-[node name="NetworkLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="NetworkLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 text = "Remote Management:"
 
-[node name="RemoteMode" type="OptionButton" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="RemoteMode" type="OptionButton" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
@@ -376,68 +417,68 @@ popup/item_1/id = 1
 popup/item_2/text = "Connect to Host"
 popup/item_2/id = 2
 
-[node name="RemoteAddress" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="RemoteAddress" type="LineEdit" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "IP Address (if Client)"
 
-[node name="RemotePort" type="LineEdit" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="RemotePort" type="LineEdit" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "8181"
 placeholder_text = "Port (8181)"
 
-[node name="NetworkButton" type="Button" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="NetworkButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Initialize Network"
 
-[node name="HSeparator5" type="HSeparator" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="HSeparator5" type="HSeparator" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 
-[node name="SystemLabel" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="SystemLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 text = "System Monitor:"
 
-[node name="CpuBox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="CpuBox" type="HBoxContainer" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/CpuBox"]
+[node name="Label" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/CpuBox"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "CPU:"
 
-[node name="CpuBar" type="ProgressBar" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/CpuBox"]
+[node name="CpuBar" type="ProgressBar" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/CpuBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 step = 1.0
 
-[node name="RamBox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="RamBox" type="HBoxContainer" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/RamBox"]
+[node name="Label" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/RamBox"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "RAM:"
 
-[node name="RamBar" type="ProgressBar" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/RamBox"]
+[node name="RamBar" type="ProgressBar" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/RamBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 step = 1.0
 
-[node name="ServerRamBox" type="HBoxContainer" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel"]
+[node name="ServerRamBox" type="HBoxContainer" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/ServerRamBox"]
+[node name="Label" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/ServerRamBox"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "Svr:"
 
-[node name="ServerRamBar" type="ProgressBar" parent="Panel/HSplitContainer/Sidebar/MarginContainer/Hbox/MonitorPanel/ServerRamBox"]
+[node name="ServerRamBar" type="ProgressBar" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/ServerRamBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://ba1bu5kyx2n8s"]
+[gd_scene load_steps=3 format=3 uid="uid://ba1bu5kyx2n8s"]
 
 [ext_resource type="Script" path="res://scripts/FlagsEditor.cs" id="1_script"]
+[ext_resource type="Theme" uid="uid://c7t8sas0t1u2v" path="res://resources/main_theme.tres" id="2_theme"]
 
 [node name="FlagsEditor" type="Window"]
 title = "JVM Optimization Flags"
@@ -11,6 +12,7 @@ wrap_controls = true
 transient = true
 exclusive = true
 unresizable = true
+theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
 [node name="Panel" type="Panel" parent="."]
