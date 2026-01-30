@@ -95,7 +95,7 @@ grow_vertical = 2
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 634.20636
+offset_right = 633.16156
 offset_bottom = -12.844971
 grow_vertical = 2
 scale = Vector2(0.95710164, 1.0186489)
@@ -147,9 +147,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 601.0
+offset_left = 597.0
 offset_top = 4.0
-offset_right = -149.9989
+offset_right = -153.9989
 offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -165,6 +165,7 @@ anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -203.5
 offset_right = 203.5
+offset_bottom = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 10
@@ -175,11 +176,12 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/SetupColumn/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 8
+alignment = 1
 
 [node name="ProfileLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Server Profile:"
+horizontal_alignment = 1
 
 [node name="HBoxProfile" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -188,6 +190,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+alignment = 1
 item_count = 1
 popup/item_0/text = "New Profile..."
 popup/item_0/id = 0
@@ -208,15 +211,18 @@ theme_override_constants/separation = 4
 [node name="PathLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "Server Path:"
+horizontal_alignment = 1
 
 [node name="PathInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "C:/Minecraft/Server"
+alignment = 1
 
 [node name="JarLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "JAR Name:"
+horizontal_alignment = 1
 
 [node name="HBoxJar" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
@@ -226,6 +232,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "fabric-server.jar"
+alignment = 1
 
 [node name="AnalyzeButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxJar"]
 unique_name_in_owner = true
@@ -233,48 +240,26 @@ layout_mode = 2
 tooltip_text = "Analyze JAR & Java"
 text = "🔍"
 
-[node name="RamLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-layout_mode = 2
-text = "RAM (Max/Min):"
-
-[node name="RamBox" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-layout_mode = 2
-
-[node name="MaxRamInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/RamBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "4G"
-placeholder_text = "Max (4G)"
-
-[node name="MinRamInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/RamBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "2G"
-placeholder_text = "Min (2G)"
-
 [node name="JavaLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "Java Path (Optional):"
+horizontal_alignment = 1
 
 [node name="JavaInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Auto"
+alignment = 1
 
 [node name="FlagsLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
+visible = false
 layout_mode = 2
 text = "JVM Optimization:"
-
-[node name="FlagsButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Configure JVM Flags"
 
 [node name="ModsLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
 text = "Custom Mods Path (Optional):"
+horizontal_alignment = 1
 
 [node name="HBoxMods" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
 layout_mode = 2
@@ -284,6 +269,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Default (./mods)"
+alignment = 1
 
 [node name="BrowseModsButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxMods"]
 unique_name_in_owner = true
@@ -318,6 +304,7 @@ layout_mode = 2
 [node name="PlayerLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Players Online:"
+horizontal_alignment = 1
 
 [node name="PlayerList" type="ItemList" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -331,8 +318,8 @@ anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -213.0
-offset_top = 4.0
-offset_right = -7.0
+offset_top = 2.0
+offset_right = -5.0
 offset_bottom = -4.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -345,9 +332,10 @@ anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -97.0
-offset_right = 97.0
-offset_bottom = -209.0
+offset_left = -98.0
+offset_top = 7.0
+offset_right = 96.0
+offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 10
@@ -387,6 +375,31 @@ layout_mode = 2
 [node name="ToolsLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 text = "Management Tools:"
+horizontal_alignment = 1
+
+[node name="RamLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+layout_mode = 2
+text = "RAM (Max/Min):"
+horizontal_alignment = 1
+
+[node name="RamBox2" type="HBoxContainer" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+layout_mode = 2
+
+[node name="MaxRamInput" type="LineEdit" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/RamBox2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "4G"
+placeholder_text = "Max (4G)"
+alignment = 1
+
+[node name="MinRamInput" type="LineEdit" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/RamBox2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "2G"
+placeholder_text = "Min (2G)"
+alignment = 1
 
 [node name="ConfigButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
@@ -395,8 +408,14 @@ text = "Edit server.properties"
 
 [node name="ModpackButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "Install Modpack"
+
+[node name="FlagsButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Configure JVM Flags"
 
 [node name="HSeparator4" type="HSeparator" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
@@ -404,10 +423,12 @@ layout_mode = 2
 [node name="NetworkLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 text = "Remote Management:"
+horizontal_alignment = 1
 
 [node name="RemoteMode" type="OptionButton" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 layout_mode = 2
+alignment = 1
 selected = 0
 item_count = 3
 popup/item_0/text = "Local Only"
@@ -421,12 +442,14 @@ popup/item_2/id = 2
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "IP Address (if Client)"
+alignment = 1
 
 [node name="RemotePort" type="LineEdit" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "8181"
 placeholder_text = "Port (8181)"
+alignment = 1
 
 [node name="NetworkButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 unique_name_in_owner = true
@@ -439,6 +462,7 @@ layout_mode = 2
 [node name="SystemLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
 text = "System Monitor:"
+horizontal_alignment = 1
 
 [node name="CpuBox" type="HBoxContainer" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
 layout_mode = 2
@@ -484,3 +508,18 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 step = 1.0
+
+[node name="ThemeDrop" type="OptionButton" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+selected = 0
+item_count = 4
+popup/item_0/text = "Minetrix"
+popup/item_0/id = 0
+popup/item_1/text = "Godot"
+popup/item_1/id = 1
+popup/item_2/text = "Fantasy"
+popup/item_2/id = 2
+popup/item_3/text = "Surprise"
+popup/item_3/id = 3
