@@ -6,7 +6,8 @@ EzMinecraftServer is a powerful, streamlined tool designed to take the frustrati
 > This is a very early version and has been primarily tested on the following hardware:
 > - **CPU**: AMD Ryzen 7 2700X / Intel i9-14900K
 > - **RAM**: 32 GB
-> - Public Test Build Coming Soon!
+>   
+>   Public Test Build Coming Soon!
 
 ## 🧪 Tested Environment
 - **Minecraft**: 1.20.1 / 1.21.1
