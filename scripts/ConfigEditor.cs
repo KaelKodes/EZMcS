@@ -11,6 +11,7 @@ public partial class ConfigEditor : Window
     private Button _cancelButton;
     private Button _eulaButton;
     private string _serverPath;
+    private string _currentProfileName;
     private Dictionary<string, LineEdit> _inputs = new Dictionary<string, LineEdit>();
 
     public override void _Ready()
@@ -26,8 +27,9 @@ public partial class ConfigEditor : Window
         CloseRequested += Hide;
     }
 
-    public void Open(string serverPath)
+    public void Open(string profileName, string serverPath)
     {
+        _currentProfileName = profileName;
         _serverPath = serverPath;
         _inputs.Clear();
         _serverPath = serverPath;
@@ -115,8 +117,8 @@ public partial class ConfigEditor : Window
 
     private void OnEulaPressed()
     {
-        GetNode<ServerManager>("/root/ServerManager").AcceptEula();
+        GetNode<ServerManager>("/root/ServerManager").AcceptEula(_currentProfileName);
         // Refresh properties in case eula.txt was added
-        Open(_serverPath);
+        Open(_currentProfileName, _serverPath);
     }
 }

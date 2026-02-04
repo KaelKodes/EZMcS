@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b1m2n3o4p5q6r"]
+[gd_scene format=3 uid="uid://b1m2n3o4p5q6r"]
 
 [ext_resource type="Script" uid="uid://552ln7flnk24" path="res://scripts/MainScreen.cs" id="1_script"]
 [ext_resource type="Theme" uid="uid://c7t8sas0t1u2v" path="res://resources/main_theme.tres" id="2_theme"]
@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://d1e2f3g4h5i6j" path="res://scenes/ModpackDownloader.tscn" id="4_modpack"]
 [ext_resource type="PackedScene" uid="uid://ba1bu5kyx2n8s" path="res://scenes/FlagsEditor.tscn" id="5_flags"]
 
-[node name="MainScreen" type="Control"]
+[node name="MainScreen" type="Control" unique_id=975083887]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,16 +16,16 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="ConfigEditor" parent="." instance=ExtResource("3_config")]
+[node name="ConfigEditor" parent="." unique_id=1718704299 instance=ExtResource("3_config")]
 unique_name_in_owner = true
 
-[node name="ModpackDownloader" parent="." instance=ExtResource("4_modpack")]
+[node name="ModpackDownloader" parent="." unique_id=583078038 instance=ExtResource("4_modpack")]
 unique_name_in_owner = true
 
-[node name="FlagsEditor" parent="." instance=ExtResource("5_flags")]
+[node name="FlagsEditor" parent="." unique_id=1152523872 instance=ExtResource("5_flags")]
 unique_name_in_owner = true
 
-[node name="ModsDialog" type="FileDialog" parent="."]
+[node name="ModsDialog" type="FileDialog" parent="." unique_id=1718917550]
 unique_name_in_owner = true
 title = "Open a Directory"
 size = Vector2i(700, 500)
@@ -33,46 +33,46 @@ ok_button_text = "Select Current Folder"
 file_mode = 2
 access = 2
 
-[node name="AffinityDialog" type="AcceptDialog" parent="."]
+[node name="AffinityDialog" type="AcceptDialog" parent="." unique_id=1715669870]
 unique_name_in_owner = true
 title = "Manual CPU Affinity"
 size = Vector2i(450, 400)
 
-[node name="VBoxMain" type="VBoxContainer" parent="AffinityDialog"]
+[node name="VBoxMain" type="VBoxContainer" parent="AffinityDialog" unique_id=1468484188]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 442.0
 offset_bottom = 351.0
 
-[node name="HBoxTools" type="HBoxContainer" parent="AffinityDialog/VBoxMain"]
+[node name="HBoxTools" type="HBoxContainer" parent="AffinityDialog/VBoxMain" unique_id=1724656473]
 layout_mode = 2
 
-[node name="OptimizeManualButton" type="Button" parent="AffinityDialog/VBoxMain/HBoxTools"]
+[node name="OptimizeManualButton" type="Button" parent="AffinityDialog/VBoxMain/HBoxTools" unique_id=1816276671]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Auto-Optimize (Smart Core Selection)"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="AffinityDialog/VBoxMain"]
+[node name="ScrollContainer" type="ScrollContainer" parent="AffinityDialog/VBoxMain" unique_id=1537493319]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBox" type="VBoxContainer" parent="AffinityDialog/VBoxMain/ScrollContainer"]
+[node name="VBox" type="VBoxContainer" parent="AffinityDialog/VBoxMain/ScrollContainer" unique_id=41441398]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="WarningLabel" type="Label" parent="AffinityDialog/VBoxMain/ScrollContainer/VBox"]
+[node name="WarningLabel" type="Label" parent="AffinityDialog/VBoxMain/ScrollContainer/VBox" unique_id=2013524586]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.333333, 0.333333, 1)
 text = "WARNING: Manual affinity can degrade performance if paired incorrectly. 
 Avoid sharing a physical core with two threads unless necessary."
 autowrap_mode = 3
 
-[node name="CoreGrid" type="GridContainer" parent="AffinityDialog/VBoxMain/ScrollContainer/VBox"]
+[node name="CoreGrid" type="GridContainer" parent="AffinityDialog/VBoxMain/ScrollContainer/VBox" unique_id=736227896]
 unique_name_in_owner = true
 layout_mode = 2
 columns = 4
 
-[node name="PlayerMenu" type="PopupMenu" parent="."]
+[node name="PlayerMenu" type="PopupMenu" parent="." unique_id=810649572]
 unique_name_in_owner = true
 item_count = 3
 item_0/text = "Kick"
@@ -82,33 +82,71 @@ item_1/id = 1
 item_2/text = "Make OP"
 item_2/id = 2
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=2015409115]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="Panel"]
+[node name="RootSplit" type="HSplitContainer" parent="Panel" unique_id=173981949]
+unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 9
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 633.16156
-offset_bottom = -12.844971
+grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.95710164, 1.0186489)
-split_offset = 800
+split_offsets = PackedInt32Array(180)
+split_offset = 180
 
-[node name="ConsoleSide" type="VBoxContainer" parent="Panel/HSplitContainer"]
+[node name="SidebarMargin" type="MarginContainer" parent="Panel/RootSplit" unique_id=1134036046]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 10
+
+[node name="SidebarVBox" type="VBoxContainer" parent="Panel/RootSplit/SidebarMargin" unique_id=1060864447]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SidebarButtonsBox" type="VBoxContainer" parent="Panel/RootSplit/SidebarMargin/SidebarVBox" unique_id=1609063080]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="NewServerButton" type="Button" parent="Panel/RootSplit/SidebarMargin/SidebarVBox/SidebarButtonsBox" unique_id=231744073]
+unique_name_in_owner = true
+layout_mode = 2
+text = "➕ New Server"
+
+[node name="AddExistingButton" type="Button" parent="Panel/RootSplit/SidebarMargin/SidebarVBox/SidebarButtonsBox" unique_id=1074020139]
+unique_name_in_owner = true
+layout_mode = 2
+text = "📂 Add Existing"
+
+[node name="HSeparator" type="HSeparator" parent="Panel/RootSplit/SidebarMargin/SidebarVBox/SidebarButtonsBox" unique_id=99029575]
+layout_mode = 2
+
+[node name="ServerList" type="ItemList" parent="Panel/RootSplit/SidebarMargin/SidebarVBox" unique_id=2057076093]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.5
+size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/HSplitContainer/ConsoleSide"]
-custom_minimum_size = Vector2(300, 0)
+[node name="RightSplit" type="HSplitContainer" parent="Panel/RootSplit" unique_id=1794131917]
+layout_mode = 2
+size_flags_horizontal = 3
+split_offsets = PackedInt32Array(400)
+split_offset = 400
+
+[node name="ConsoleSide" type="VBoxContainer" parent="Panel/RootSplit/RightSplit" unique_id=1448565682]
+custom_minimum_size = Vector2(470, 0)
+layout_mode = 2
+
+[node name="ConsoleMargin" type="MarginContainer" parent="Panel/RootSplit/RightSplit/ConsoleSide" unique_id=76918907]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
@@ -116,7 +154,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="ConsoleOutput" type="RichTextLabel" parent="Panel/HSplitContainer/ConsoleSide/MarginContainer"]
+[node name="ConsoleOutput" type="RichTextLabel" parent="Panel/RootSplit/RightSplit/ConsoleSide/ConsoleMargin" unique_id=1376299914]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -125,47 +163,35 @@ bbcode_enabled = true
 scroll_following = true
 selection_enabled = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/HSplitContainer/ConsoleSide"]
+[node name="CommandMargin" type="MarginContainer" parent="Panel/RootSplit/RightSplit/ConsoleSide" unique_id=1531875011]
 layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="MarginContainer" type="MarginContainer" parent="Panel/HSplitContainer/ConsoleSide/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="CommandInput" type="LineEdit" parent="Panel/HSplitContainer/ConsoleSide/HBoxContainer/MarginContainer"]
+[node name="CommandInput" type="LineEdit" parent="Panel/RootSplit/RightSplit/ConsoleSide/CommandMargin" unique_id=1405189991]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter server command..."
 
-[node name="SetupColumn" type="Panel" parent="Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 597.0
-offset_top = 4.0
-offset_right = -153.9989
-offset_bottom = -6.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.8399976, 1)
-size_flags_horizontal = 4
+[node name="Management" type="HSplitContainer" parent="Panel/RootSplit/RightSplit" unique_id=2138140845]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+split_offsets = PackedInt32Array(250)
+split_offset = 250
+
+[node name="SetupColumn" type="Panel" parent="Panel/RootSplit/RightSplit/Management" unique_id=916277409]
+layout_mode = 2
+size_flags_vertical = 3
 theme_type_variation = &"SidebarPanel"
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/SetupColumn"]
+[node name="SetupMargin" type="MarginContainer" parent="Panel/RootSplit/RightSplit/Management/SetupColumn" unique_id=362434251]
 layout_mode = 1
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -203.5
-offset_right = 203.5
-offset_bottom = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 10
@@ -173,20 +199,18 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/SetupColumn/MarginContainer"]
+[node name="SetupVBox" type="VBoxContainer" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin" unique_id=320315509]
 layout_mode = 2
-size_flags_horizontal = 4
-alignment = 1
 
-[node name="ProfileLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
+[node name="ProfileLabel" type="Label" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin/SetupVBox" unique_id=1023174697]
 layout_mode = 2
 text = "Server Profile:"
 horizontal_alignment = 1
 
-[node name="HBoxProfile" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
+[node name="HBoxProfile" type="HBoxContainer" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin/SetupVBox" unique_id=1417518629]
 layout_mode = 2
 
-[node name="ProfileSelector" type="OptionButton" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/HBoxProfile"]
+[node name="ProfileSelector" type="OptionButton" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin/SetupVBox/HBoxProfile" unique_id=1880736996]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -195,146 +219,47 @@ item_count = 1
 popup/item_0/text = "New Profile..."
 popup/item_0/id = 0
 
-[node name="SaveProfileButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/HBoxProfile"]
+[node name="SaveProfileButton" type="Button" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin/SetupVBox/HBoxProfile" unique_id=1163843913]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Save Profile"
 text = "💾"
 
-[node name="HSeparator1" type="HSeparator" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
+[node name="DeleteProfileButton" type="Button" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin/SetupVBox/HBoxProfile" unique_id=88648855]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Delete Current Profile"
+text = "❌"
+
+[node name="HSeparator1" type="HSeparator" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin/SetupVBox" unique_id=885256919]
 layout_mode = 2
 
-[node name="SetupPanel" type="VBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
+[node name="SetupPanel" type="VBoxContainer" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin/SetupVBox" unique_id=257473131]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="PathLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-layout_mode = 2
-text = "Server Path:"
-horizontal_alignment = 1
-
-[node name="PathInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "C:/Minecraft/Server"
-alignment = 1
-
-[node name="JarLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-layout_mode = 2
-text = "JAR Name:"
-horizontal_alignment = 1
-
-[node name="HBoxJar" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-layout_mode = 2
-
-[node name="JarInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxJar"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "fabric-server.jar"
-alignment = 1
-
-[node name="AnalyzeButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxJar"]
-unique_name_in_owner = true
-layout_mode = 2
-tooltip_text = "Analyze JAR & Java"
-text = "🔍"
-
-[node name="JavaLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-layout_mode = 2
-text = "Java Path (Optional):"
-horizontal_alignment = 1
-
-[node name="JavaInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Auto"
-alignment = 1
-
-[node name="FlagsLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-visible = false
-layout_mode = 2
-text = "JVM Optimization:"
-
-[node name="ModsLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-layout_mode = 2
-text = "Custom Mods Path (Optional):"
-horizontal_alignment = 1
-
-[node name="HBoxMods" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-layout_mode = 2
-
-[node name="ModsInput" type="LineEdit" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxMods"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Default (./mods)"
-alignment = 1
-
-[node name="BrowseModsButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxMods"]
-unique_name_in_owner = true
-layout_mode = 2
-tooltip_text = "Browse Mods Folder"
-text = "🔍"
-
-[node name="HBoxAffinity" type="HBoxContainer" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel"]
-layout_mode = 2
-
-[node name="SmartAffinity" type="CheckBox" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxAffinity"]
-unique_name_in_owner = true
-layout_mode = 2
-tooltip_text = "Pins the server to physical cores to reduce micro-stutters and avoid OS contention."
-button_pressed = true
-text = "Optimize CPU Affinity"
-
-[node name="ManualAffinityButton" type="Button" parent="Panel/SetupColumn/MarginContainer/VBoxContainer/SetupPanel/HBoxAffinity"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"HeaderSmall"
-text = "Manually set CPU Affinity"
-flat = true
-
-[node name="HSeparator2" type="HSeparator" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ControlSeparator" type="Control" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-
-[node name="PlayerLabel" type="Label" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
+[node name="PlayerLabel" type="Label" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin/SetupVBox" unique_id=878342963]
 layout_mode = 2
 text = "Players Online:"
 horizontal_alignment = 1
 
-[node name="PlayerList" type="ItemList" parent="Panel/SetupColumn/MarginContainer/VBoxContainer"]
+[node name="PlayerList" type="ItemList" parent="Panel/RootSplit/RightSplit/Management/SetupColumn/SetupMargin/SetupVBox" unique_id=1335009381]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MonitorColumn" type="Panel" parent="Panel"]
-layout_mode = 1
-anchors_preset = 11
-anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -213.0
-offset_top = 2.0
-offset_right = -5.0
-offset_bottom = -4.0
-grow_horizontal = 0
-grow_vertical = 2
-size_flags_horizontal = 3
+[node name="MonitorColumn" type="Panel" parent="Panel/RootSplit/RightSplit/Management" unique_id=859747572]
+layout_mode = 2
+size_flags_vertical = 3
 theme_type_variation = &"SidebarPanel"
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/MonitorColumn"]
+[node name="MonitorMargin" type="MarginContainer" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn" unique_id=1776994670]
 layout_mode = 1
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -98.0
-offset_top = 7.0
-offset_right = 96.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 10
@@ -342,18 +267,25 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="MonitorPanel" type="VBoxContainer" parent="Panel/MonitorColumn/MarginContainer"]
+[node name="MonitorPanel" type="VBoxContainer" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin" unique_id=1484629364]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="StatusLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="StartStopButton" type="Button" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=532124728]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Start Server"
+
+[node name="StatusLabel" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=1378048608]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Status: Stopped"
 horizontal_alignment = 1
 
-[node name="RestartNotification" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="RestartNotification" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=731472793]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -361,30 +293,23 @@ theme_override_colors/font_color = Color(1, 0.8, 0, 1)
 text = "⚠️ Restart required"
 horizontal_alignment = 1
 
-[node name="StartStopButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 45)
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Start Server"
-
-[node name="HSeparator3" type="HSeparator" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="HSeparator3" type="HSeparator" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=1504913599]
 layout_mode = 2
 
-[node name="ToolsLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="ToolsLabel" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=697334337]
 layout_mode = 2
 text = "Management Tools:"
 horizontal_alignment = 1
 
-[node name="RamLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="RamLabel" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=1465599488]
 layout_mode = 2
 text = "RAM (Max/Min):"
 horizontal_alignment = 1
 
-[node name="RamBox2" type="HBoxContainer" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="RamBox" type="HBoxContainer" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=1831130265]
 layout_mode = 2
 
-[node name="MaxRamInput" type="LineEdit" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/RamBox2"]
+[node name="MaxRamInput" type="LineEdit" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel/RamBox" unique_id=349218540]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -392,7 +317,7 @@ text = "4G"
 placeholder_text = "Max (4G)"
 alignment = 1
 
-[node name="MinRamInput" type="LineEdit" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/RamBox2"]
+[node name="MinRamInput" type="LineEdit" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel/RamBox" unique_id=1745481171]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -400,31 +325,31 @@ text = "2G"
 placeholder_text = "Min (2G)"
 alignment = 1
 
-[node name="ConfigButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="ConfigButton" type="Button" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=2089911291]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Edit server.properties"
 
-[node name="ModpackButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="ModpackButton" type="Button" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=1750795598]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Install Modpack"
 
-[node name="FlagsButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="FlagsButton" type="Button" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=1052994102]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Configure JVM Flags"
 
-[node name="HSeparator4" type="HSeparator" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="HSeparator4" type="HSeparator" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=154394739]
 layout_mode = 2
 
-[node name="NetworkLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="NetworkLabel" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=1595608136]
 layout_mode = 2
 text = "Remote Management:"
 horizontal_alignment = 1
 
-[node name="RemoteMode" type="OptionButton" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="RemoteMode" type="OptionButton" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=983418643]
 unique_name_in_owner = true
 layout_mode = 2
 alignment = 1
@@ -437,86 +362,85 @@ popup/item_1/id = 1
 popup/item_2/text = "Connect to Host"
 popup/item_2/id = 2
 
-[node name="RemoteAddress" type="LineEdit" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="RemoteAddress" type="LineEdit" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=276005304]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "IP Address (if Client)"
 alignment = 1
 
-[node name="RemotePort" type="LineEdit" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="RemotePort" type="LineEdit" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=64591372]
 unique_name_in_owner = true
 layout_mode = 2
 text = "8181"
 placeholder_text = "Port (8181)"
 alignment = 1
 
-[node name="NetworkButton" type="Button" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="NetworkButton" type="Button" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=1628967867]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Initialize Network"
 
-[node name="HSeparator5" type="HSeparator" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="HSeparator5" type="HSeparator" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=955575150]
 layout_mode = 2
 
-[node name="SystemLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="SystemLabel" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=899057538]
 layout_mode = 2
 text = "System Monitor:"
 horizontal_alignment = 1
 
-[node name="CpuBox" type="HBoxContainer" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="CpuBox" type="HBoxContainer" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=1517257710]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/CpuBox"]
+[node name="Label" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel/CpuBox" unique_id=1481112082]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "CPU:"
 
-[node name="CpuBar" type="ProgressBar" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/CpuBox"]
+[node name="CpuBar" type="ProgressBar" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel/CpuBox" unique_id=816261080]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 step = 1.0
 
-[node name="RamBox" type="HBoxContainer" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="RamMonitorBox" type="HBoxContainer" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=123057471]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/RamBox"]
+[node name="Label" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel/RamMonitorBox" unique_id=1913380627]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "RAM:"
 
-[node name="RamBar" type="ProgressBar" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/RamBox"]
+[node name="RamBar" type="ProgressBar" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel/RamMonitorBox" unique_id=176826402]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 step = 1.0
 
-[node name="ServerRamBox" type="HBoxContainer" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel"]
+[node name="ServerRamBox" type="HBoxContainer" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel" unique_id=294029023]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/ServerRamBox"]
+[node name="Label" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel/ServerRamBox" unique_id=1005136580]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "Svr:"
 
-[node name="ServerRamBar" type="ProgressBar" parent="Panel/MonitorColumn/MarginContainer/MonitorPanel/ServerRamBox"]
+[node name="ServerRamBar" type="ProgressBar" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/MonitorPanel/ServerRamBox" unique_id=2061024534]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 step = 1.0
 
-[node name="HBoxContainer" type="VBoxContainer" parent="Panel/MonitorColumn/MarginContainer"]
+[node name="FooterBox" type="VBoxContainer" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin" unique_id=4464294]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="ThemeDrop" type="OptionButton" parent="Panel/MonitorColumn/MarginContainer/HBoxContainer"]
+[node name="ThemeDrop" type="OptionButton" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/FooterBox" unique_id=233580908]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 8
 alignment = 1
 selected = 0
 item_count = 4
@@ -529,9 +453,8 @@ popup/item_2/id = 2
 popup/item_3/text = "Cyberblock"
 popup/item_3/id = 3
 
-[node name="VersionLabel" type="Label" parent="Panel/MonitorColumn/MarginContainer/HBoxContainer"]
+[node name="VersionLabel" type="Label" parent="Panel/RootSplit/RightSplit/Management/MonitorColumn/MonitorMargin/FooterBox" unique_id=1962236664]
 layout_mode = 2
 size_flags_vertical = 8
-text = " 0.0.8"
+text = " 0.0.9"
 horizontal_alignment = 1
-vertical_alignment = 2

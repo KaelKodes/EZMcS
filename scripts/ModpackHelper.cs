@@ -26,6 +26,7 @@ public partial class ModpackHelper : Node
                 var totalBytesRead = 0L;
                 var buffer = new byte[8192];
                 var isMoreToRead = true;
+                var lastReportedPercent = -1;
 
                 string tempFile = Path.Combine(targetDir, "modpack_temp.zip");
 
@@ -47,7 +48,13 @@ public partial class ModpackHelper : Node
                             totalBytesRead += bytesRead;
                             if (totalBytes != -1)
                             {
-                                EmitSignal(SignalName.DownloadProgress, (float)totalBytesRead / totalBytes);
+                                // Only report when percentage changes by at least 1%
+                                int currentPercent = (int)((float)totalBytesRead / totalBytes * 100);
+                                if (currentPercent > lastReportedPercent)
+                                {
+                                    lastReportedPercent = currentPercent;
+                                    EmitSignal(SignalName.DownloadProgress, (float)totalBytesRead / totalBytes);
+                                }
                             }
                         }
                         while (isMoreToRead);

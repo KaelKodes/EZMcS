@@ -13,6 +13,7 @@ public partial class SystemMonitor : Node
     private float _pCpu = 0;
     private float _totalRamMb = 0;
     private float _pServerRam = 0;
+    private string _targetProfile;
 
     [Signal]
     public delegate void StatsUpdatedEventHandler(float cpuPercent, float ramPercent, float serverRamPercent);
@@ -40,6 +41,11 @@ public partial class SystemMonitor : Node
             // Perform an initial check immediately after a short delay to populate UI
             GetTree().CreateTimer(0.5f).Connect("timeout", new Callable(this, MethodName.OnTimerTimeout));
         }
+    }
+
+    public void SetTargetProfile(string profileName)
+    {
+        _targetProfile = profileName;
     }
 
     [SupportedOSPlatform("windows")]
@@ -91,19 +97,22 @@ public partial class SystemMonitor : Node
 
             // Poll active server process RAM if running
             ServerManager sm = GetNode<ServerManager>("/root/ServerManager");
-            if (sm.IsRunning && sm.ActiveProcess != null && !sm.ActiveProcess.HasExited)
+            if (!string.IsNullOrEmpty(_targetProfile) && sm.IsRunning(_targetProfile))
             {
-                try
+                var process = sm.GetActiveProcess(_targetProfile);
+                if (process != null && !process.HasExited)
                 {
-                    sm.ActiveProcess.Refresh();
-                    float usedMb = sm.ActiveProcess.PrivateMemorySize64 / 1024f / 1024f; // Use Private Memory for better accuracy
-                    float maxMb = sm.MaxRamMb;
-                    _pServerRam = (usedMb / maxMb) * 100f;
+                    try
+                    {
+                        process.Refresh();
+                        float usedMb = process.PrivateMemorySize64 / 1024f / 1024f;
+                        float maxMb = sm.GetMaxRamMb(_targetProfile);
+                        _pServerRam = (usedMb / maxMb) * 100f;
 
-                    // Cap at 100% just in case of slight overflow or JVM overhead
-                    if (_pServerRam > 100f) _pServerRam = 100f;
+                        if (_pServerRam > 100f) _pServerRam = 100f;
+                    }
+                    catch { _pServerRam = 0; }
                 }
-                catch { _pServerRam = 0; }
             }
             else
             {

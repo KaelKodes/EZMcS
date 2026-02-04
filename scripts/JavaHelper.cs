@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -10,6 +11,7 @@ using Microsoft.Win32;
 public static class JavaHelper
 {
     private static readonly string[] CommonJavaPaths = {
+        Path.Combine(OS.GetUserDataDir(), "jdk"),
         @"C:\Program Files\Java",
         @"C:\Program Files\Eclipse Adoptium",
         @"C:\Program Files\BellSoft",
@@ -135,6 +137,7 @@ public static class JavaHelper
 
     private static void ScanRegistry(List<JavaInfo> found, string keyPath, string valueName)
     {
+        if (!OperatingSystem.IsWindows()) return;
         try
         {
             using (var baseKey = Registry.LocalMachine.OpenSubKey(keyPath))
@@ -167,7 +170,7 @@ public static class JavaHelper
         catch { }
     }
 
-    private static string FindJavaExeInDir(string dir)
+    public static string FindJavaExeInDir(string dir)
     {
         string binPath = Path.Combine(dir, "bin", "java.exe");
         if (File.Exists(binPath)) return binPath;
@@ -183,29 +186,52 @@ public static class JavaHelper
         {
             using (ZipArchive archive = ZipFile.OpenRead(jarPath))
             {
+                // 1. Check fabric.mod.json
                 var fabricEntry = archive.GetEntry("fabric.mod.json");
                 if (fabricEntry != null)
                 {
                     using (StreamReader reader = new StreamReader(fabricEntry.Open()))
                     {
-                        string content = reader.ReadToEnd();
-                        var javaMatch = Regex.Match(content, @"\""java\""\s*:\s*\""[^0-9]*([0-9]+)");
-                        if (javaMatch.Success) return int.Parse(javaMatch.Groups[1].Value);
+                        var json = JsonDocument.Parse(reader.ReadToEnd());
+                        if (json.RootElement.TryGetProperty("depends", out var depends))
+                        {
+                            if (depends.TryGetProperty("java", out var javaProp))
+                            {
+                                string v = javaProp.GetString();
+                                var match = Regex.Match(v, @"([0-9]+)");
+                                if (match.Success) return int.Parse(match.Groups[1].Value);
+                            }
 
-                        var mcMatch = Regex.Match(content, @"\""minecraft\""\s*:\s*\""[^0-9]*([1-9]+\.[0-9]+(?:\.[0-9]+)?)");
-                        if (mcMatch.Success) return GetJavaForMCVersion(mcMatch.Groups[1].Value);
+                            if (depends.TryGetProperty("minecraft", out var mcProp))
+                            {
+                                string v = mcProp.GetString();
+                                var match = Regex.Match(v, @"([0-9]+\.[0-9]+(?:\.[0-9]+)?)");
+                                if (match.Success) return GetJavaForMCVersion(match.Groups[1].Value);
+                            }
+                        }
                     }
                 }
 
+                // 2. Check version.json (Vanilla/Legacy)
                 var versionEntry = archive.GetEntry("version.json");
                 if (versionEntry != null)
                 {
                     using (StreamReader reader = new StreamReader(versionEntry.Open()))
                     {
-                        string content = reader.ReadToEnd();
-                        var match = Regex.Match(content, "\"id\": \"([0-9]+\\.[0-9]+(?:\\.[0-9]+)?)");
-                        if (match.Success) return GetJavaForMCVersion(match.Groups[0].Value);
+                        var json = JsonDocument.Parse(reader.ReadToEnd());
+                        if (json.RootElement.TryGetProperty("id", out var idProp))
+                        {
+                            return GetJavaForMCVersion(idProp.GetString());
+                        }
                     }
+                }
+
+                // 3. Check for specific entry names indicating MC version (common in older jars)
+                var mcVersionEntry = archive.Entries.FirstOrDefault(e => e.Name.StartsWith("minecraft_version_"));
+                if (mcVersionEntry != null)
+                {
+                    var match = Regex.Match(mcVersionEntry.Name, @"minecraft_version_([0-9]+\.[0-9]+(?:\.[0-9]+)?)");
+                    if (match.Success) return GetJavaForMCVersion(match.Groups[1].Value);
                 }
             }
         }
@@ -217,8 +243,14 @@ public static class JavaHelper
         return 0;
     }
 
-    private static int GetJavaForMCVersion(string mcVersion)
+    public static int GetJavaForMCVersion(string mcVersion)
     {
+        if (string.IsNullOrEmpty(mcVersion)) return 8;
+
+        // Clean up version string (e.g. >=1.20.1 -> 1.20.1)
+        var cleanMatch = Regex.Match(mcVersion, @"([0-9]+\.[0-9]+(?:\.[0-9]+)?)");
+        if (cleanMatch.Success) mcVersion = cleanMatch.Groups[1].Value;
+
         var parts = mcVersion.Split('.');
         if (parts.Length >= 2)
         {
@@ -228,6 +260,7 @@ public static class JavaHelper
                 if (major == 1)
                 {
                     if (minor >= 21) return 21;
+                    if (minor >= 20.5) return 21; // 1.20.5+ requires Java 21
                     if (minor == 20)
                     {
                         if (parts.Length >= 3 && int.TryParse(parts[2], out int patch) && patch >= 5) return 21;
@@ -235,6 +268,8 @@ public static class JavaHelper
                     }
                     if (minor >= 18) return 17;
                     if (minor >= 17) return 16;
+                    if (minor >= 13) return 8; // Actually 8 is fine for 1.13-1.16
+                    if (minor >= 7) return 8;
                 }
             }
         }
@@ -244,7 +279,7 @@ public static class JavaHelper
     private static int GetMajorVersion(string text)
     {
         var lower = text.ToLower();
-        var match = Regex.Match(lower, @"(?:jdk-|jre-|jdk|jre|version-|java-)([0-12]+)");
+        var match = Regex.Match(lower, @"(?:jdk-|jre-|jdk|jre|version-|java-)([0-9]+)");
         if (match.Success)
         {
             int v = int.Parse(match.Groups[1].Value);

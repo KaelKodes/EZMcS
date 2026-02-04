@@ -21,15 +21,8 @@ public partial class NetworkManager : Node
     {
         if (Multiplayer.IsServer())
         {
-            // When a client connects, send them the current server status and configuration
-            ServerManager sm = GetNode<ServerManager>("/root/ServerManager");
-            RpcId(id, MethodName.ReceiveRemoteStatus, sm.IsRunning ? (sm.IsRunning ? "Running" : "Stopped") : "Stopped");
-
-            // Sync current player list
-            foreach (var player in sm.OnlinePlayers)
-            {
-                RpcId(id, MethodName.ReceiveRemotePlayerJoined, player);
-            }
+            // When a client connects, we should ideally sync all running servers' status
+            // For now, the client will request status as needed or we can broadcast on change.
         }
     }
 
@@ -115,99 +108,99 @@ public partial class NetworkManager : Node
     // --- Remote Lifecycle Requests ---
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false)]
-    public void RequestStartServer(string path, string jar, string maxRam, string minRam, string javaPath, string extraFlags)
+    public void RequestStartServer(string profileName, string path, string jar, string maxRam, string minRam, string javaPath, string extraFlags)
     {
         if (Multiplayer.IsServer())
         {
-            GetNode<ServerManager>("/root/ServerManager").StartServer(path, jar, maxRam, minRam, javaPath, extraFlags);
+            GetNode<ServerManager>("/root/ServerManager").StartServer(profileName, path, jar, maxRam, minRam, javaPath, extraFlags);
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false)]
-    public void RequestStopServer()
+    public void RequestStopServer(string profileName)
     {
         if (Multiplayer.IsServer())
         {
-            GetNode<ServerManager>("/root/ServerManager").StopServer();
+            GetNode<ServerManager>("/root/ServerManager").StopServer(profileName);
         }
     }
 
     // --- Standard Monitoring ---
 
-    private void OnLocalLogReceived(string message, bool isError)
+    private void OnLocalLogReceived(string profileName, string message, bool isError)
     {
         if (Multiplayer.IsServer())
         {
-            Rpc(MethodName.ReceiveRemoteLog, message, isError);
+            Rpc(MethodName.ReceiveRemoteLog, profileName, message, isError);
         }
     }
 
-    private void OnLocalStatusChanged(string newStatus)
+    private void OnLocalStatusChanged(string profileName, string newStatus)
     {
         if (Multiplayer.IsServer())
         {
-            Rpc(MethodName.ReceiveRemoteStatus, newStatus);
+            Rpc(MethodName.ReceiveRemoteStatus, profileName, newStatus);
         }
     }
 
-    private void OnLocalPlayerJoined(string playerName)
+    private void OnLocalPlayerJoined(string profileName, string playerName)
     {
         if (Multiplayer.IsServer())
         {
-            Rpc(MethodName.ReceiveRemotePlayerJoined, playerName);
+            Rpc(MethodName.ReceiveRemotePlayerJoined, profileName, playerName);
         }
     }
 
-    private void OnLocalPlayerLeft(string playerName)
+    private void OnLocalPlayerLeft(string profileName, string playerName)
     {
         if (Multiplayer.IsServer())
         {
-            Rpc(MethodName.ReceiveRemotePlayerLeft, playerName);
+            Rpc(MethodName.ReceiveRemotePlayerLeft, profileName, playerName);
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false)]
-    public void SendRemoteCommand(string command)
+    public void SendRemoteCommand(string profileName, string command)
     {
         if (Multiplayer.IsServer())
         {
-            GetNode<ServerManager>("/root/ServerManager").SendCommand(command);
+            GetNode<ServerManager>("/root/ServerManager").SendCommand(profileName, command);
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
-    public void ReceiveRemoteLog(string message, bool isError)
+    public void ReceiveRemoteLog(string profileName, string message, bool isError)
     {
         if (!Multiplayer.IsServer())
         {
-            GetNode<ServerManager>("/root/ServerManager").EmitSignal(ServerManager.SignalName.LogReceived, message, isError);
+            GetNode<ServerManager>("/root/ServerManager").EmitSignal(ServerManager.SignalName.LogReceived, profileName, message, isError);
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
-    public void ReceiveRemoteStatus(string newStatus)
+    public void ReceiveRemoteStatus(string profileName, string newStatus)
     {
         if (!Multiplayer.IsServer())
         {
-            GetNode<ServerManager>("/root/ServerManager").EmitSignal(ServerManager.SignalName.StatusChanged, newStatus);
+            GetNode<ServerManager>("/root/ServerManager").EmitSignal(ServerManager.SignalName.StatusChanged, profileName, newStatus);
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
-    public void ReceiveRemotePlayerJoined(string playerName)
+    public void ReceiveRemotePlayerJoined(string profileName, string playerName)
     {
         if (!Multiplayer.IsServer())
         {
-            GetNode<ServerManager>("/root/ServerManager").EmitSignal(ServerManager.SignalName.PlayerJoined, playerName);
+            GetNode<ServerManager>("/root/ServerManager").EmitSignal(ServerManager.SignalName.PlayerJoined, profileName, playerName);
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
-    public void ReceiveRemotePlayerLeft(string playerName)
+    public void ReceiveRemotePlayerLeft(string profileName, string playerName)
     {
         if (!Multiplayer.IsServer())
         {
-            GetNode<ServerManager>("/root/ServerManager").EmitSignal(ServerManager.SignalName.PlayerLeft, playerName);
+            GetNode<ServerManager>("/root/ServerManager").EmitSignal(ServerManager.SignalName.PlayerLeft, profileName, playerName);
         }
     }
 

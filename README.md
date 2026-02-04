@@ -1,17 +1,31 @@
-# EzMinecraftServer
+# EzMinecraftServer v0.0.9
 
 EzMinecraftServer is a powerful, streamlined tool designed to take the frustration out of managing Minecraft servers.
 
 > [!NOTE]
 > This is a very early version and has been primarily tested on the following hardware:
-> - **CPU**: AMD Ryzen 7 2700X (8 cores, 3.70 GHz)
+> - **CPU**: AMD Ryzen 7 2700X / Intel i9-14900K
 > - **RAM**: 32 GB
 
 ## 🧪 Tested Environment
-- **Minecraft**: 1.21.1
-- **Fabric**: 0.18.4
-- **Java**: Adoptium JDK 21.0.9.10-hotspot
-- **Mod Manager**: Curseforge
+- **Minecraft**: 1.20.1 / 1.21.1
+- **Vanilla**: ✅ Supported
+- **Fabric**: ✅ Supported (installer-based)
+- **Forge**: ✅ Supported (installer-based)
+- **NeoForge**: ✅ Supported (installer-based)
+- **Java**: Adoptium JDK 17 / 21
+- **Mod Manager**: CurseForge
+
+---
+
+## 🚀 Server Setup Wizard
+Create new servers with the guided wizard:
+- **Vanilla** - Direct JAR download from Mojang
+- **Fabric** - Automatic installer download and execution
+- **Forge** - Automatic installer download and execution
+- **NeoForge** - Automatic installer download and execution
+
+The wizard handles EULA acceptance, Java version detection, and initial server configuration automatically.
 
 ---
 
@@ -27,7 +41,10 @@ The heart of your server management.
 ### 2. Setup
 Best managed by the host user.
 - **Server Profiles**: Save and persist your settings (path, JAR name, RAM, etc.) across updates.
-- **Custom Mods Path**: Redirect the server to use any folder as your `mods` directory, allowing integration with external mod managers.
+- **CurseForge Mod Sync**: Point to your CurseForge mods folder and sync automatically on server start.
+- **Mod Conflict Detection**: Automatically detects client-only mods that crash the server.
+- **Interactive Conflict Resolution**: Choose which problematic mods to remove with a single click.
+- **Mod Blacklist**: Removed mods won't be re-synced from CurseForge.
 - **Optimize CPU Affinity**: 
   > [!WARNING]
   > **Experimental Feature.** Scans CPU topology to pin Minecraft threads to physical/performance cores. 
@@ -40,6 +57,7 @@ Best managed by the host user.
 - **Config Editor**: Quickly edit `server.properties` through a dedicated UI.
 - **RAM Allocation**: Set Min/Max RAM (e.g., `4G`, `2G`).
 - **JVM Flags**: Toggle common optimization flags or add your own custom arguments.
+- **Intelligent Java Detection**: Automatically finds installed JDKs and selects the correct version for your server.
 
 #### Remote Management Modes
 - **Host Account**: Set a port and click "Initialize Network" twice (once to clean up/check, once to start). Leave IP blank.
@@ -60,6 +78,16 @@ Customize your experience with the **Theme Selection** dropdown:
 - **Godot**: Modern dark theme.
 - **Fantasy**: Retro blue-box RPG style.
 - **Cyberpunk**: High-contrast neon interface.
+
+---
+
+## 📋 Changelog (v0.0.9)
+- Added Server Setup Wizard for Vanilla, Fabric, Forge, and NeoForge
+- Added CurseForge mod sync with automatic conflict detection
+- Added interactive mod conflict resolution dialog
+- Added mod blacklist to prevent re-syncing removed mods
+- Added intelligent Java version detection and auto-selection
+- Improved CPU affinity detection for Intel hybrid architectures
 
 ---
 
